@@ -20,7 +20,7 @@ function App() {
   const [currentView, setCurrentView] = useState<ViewState>('LANDING');
 
   // Application Data State
-  const [listings, setListings] = useState<Listing[]>(MOCK_LISTINGS);
+  const [listings, setListings] = useState<Listing[]>(MOCK_LISTINGS || []);
   const [bookings, setBookings] = useState<Booking[]>([]);
   
   // Filtering
@@ -78,6 +78,7 @@ function App() {
   };
 
   const filteredListings = useMemo(() => {
+    if (!listings) return [];
     return listings.filter(listing => {
       if (listing.rentPrice > filters.maxPrice) return false;
       if (filters.roomType !== 'ALL' && listing.type !== filters.roomType) return false;

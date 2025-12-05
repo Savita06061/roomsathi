@@ -1,3 +1,4 @@
+
 import { GoogleGenAI, Chat, GenerateContentResponse } from "@google/genai";
 import { MOCK_LISTINGS, LOCALITIES } from '../constants';
 
@@ -20,22 +21,38 @@ Guidelines:
 
 let chatSession: Chat | null = null;
 
-export const getChatSession = (): Chat => {
-  if (!chatSession) {
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-    chatSession = ai.chats.create({
-      model: 'gemini-2.5-flash',
-      config: {
-        systemInstruction: SYSTEM_INSTRUCTION,
-      },
-    });
+export const getChatSession = (): Chat | null => {
+  try {
+    // Safety check for browser environment
+    const apiKey = typeof process !== 'undefined' && process.env ? process.env.API_KEY : '';
+    
+    if (!apiKey) {
+      console.warn("API Key missing for Gemini. AI features will not work.");
+      return null;
+    }
+
+    if (!chatSession) {
+      const ai = new GoogleGenAI({ apiKey });
+      chatSession = ai.chats.create({
+        model: 'gemini-2.5-flash',
+        config: {
+          systemInstruction: SYSTEM_INSTRUCTION,
+        },
+      });
+    }
+    return chatSession;
+  } catch (error) {
+    console.error("Failed to initialize Gemini:", error);
+    return null;
   }
-  return chatSession;
 };
 
 export const sendMessageToSaathi = async (message: string): Promise<string> => {
   try {
     const chat = getChatSession();
+    if (!chat) {
+       return "Saathi AI is currently offline (API Key missing). Please contact admin.";
+    }
     const result: GenerateContentResponse = await chat.sendMessage({ message });
     return result.text || "Sorry, I couldn't understand that. Please try again.";
   } catch (error) {
