@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Phone, Mail, MapPin, Facebook, Instagram, Twitter, Lock } from 'lucide-react';
+import { Phone, Mail, MapPin, Facebook, Instagram, Twitter, Lock, ShieldCheck, Heart } from 'lucide-react';
 
 interface FooterProps {
   onAdminClick?: () => void;
@@ -8,15 +8,20 @@ interface FooterProps {
 
 const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
   return (
-    <footer className="bg-gray-900 text-gray-300 py-12 border-t border-gray-800">
-      <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="bg-slate-900 text-slate-400 py-16 border-t border-slate-800">
+      <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12">
         
         {/* Brand Section */}
         <div className="col-span-1 md:col-span-1">
-          <h2 className="text-2xl font-bold text-white mb-4">Kawardha Room Saathi</h2>
-          <p className="text-sm text-gray-400 mb-6">
+          <div className="flex items-center gap-2 mb-6">
+            <div className="bg-orange-600 p-1.5 rounded-lg text-white">
+               <ShieldCheck size={20} />
+            </div>
+            <h2 className="text-xl font-bold text-white tracking-tight">RoomSaathi</h2>
+          </div>
+          <p className="text-sm leading-relaxed text-slate-500 mb-6">
             Connecting Kawardha's landlords and tenants on a single, secure, and smart platform. 
-            Trusted by 1000+ locals.
+            No brokers, direct contact.
           </p>
           <div className="flex gap-4">
             <a href="#" className="hover:text-orange-500 transition-colors"><Facebook size={20} /></a>
@@ -25,18 +30,18 @@ const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
           </div>
         </div>
 
-        {/* Quick Links */}
+        {/* Links */}
         <div>
-          <h3 className="text-white font-semibold mb-4">Links</h3>
-          <ul className="space-y-2 text-sm">
-            <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
+          <h3 className="text-white font-bold mb-4 uppercase text-xs tracking-widest">Solutions</h3>
+          <ul className="space-y-3 text-sm">
+            <li><a href="#" className="hover:text-orange-500 transition-colors">Find a PG</a></li>
+            <li><a href="#" className="hover:text-orange-500 transition-colors">Family Flats</a></li>
+            <li><a href="#" className="hover:text-orange-500 transition-colors">Post a Room</a></li>
             {onAdminClick && (
               <li>
                 <button 
                   onClick={onAdminClick}
-                  className="flex items-center gap-1.5 text-orange-400 hover:text-orange-300 font-bold transition-colors mt-2"
+                  className="flex items-center gap-1.5 text-orange-500 hover:text-orange-400 font-bold transition-colors mt-2"
                 >
                   <Lock size={14} /> Admin Portal
                 </button>
@@ -45,45 +50,41 @@ const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
           </ul>
         </div>
 
-        {/* Services */}
+        {/* Info */}
         <div>
-          <h3 className="text-white font-semibold mb-4">Services</h3>
-          <ul className="space-y-2 text-sm">
-            <li><a href="#" className="hover:text-white transition-colors">Post a Room</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Find a PG</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Rental Agreement</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Premium Support</a></li>
+          <h3 className="text-white font-bold mb-4 uppercase text-xs tracking-widest">Company</h3>
+          <ul className="space-y-3 text-sm">
+            <li><a href="#" className="hover:text-orange-500 transition-colors">About Us</a></li>
+            <li><a href="#" className="hover:text-orange-500 transition-colors">Privacy Policy</a></li>
+            <li><a href="#" className="hover:text-orange-500 transition-colors">Terms of Service</a></li>
           </ul>
         </div>
 
-        {/* Official Contact (Admin) */}
-        <div className="bg-gray-800 p-6 rounded-xl border border-gray-700">
-          <h3 className="text-orange-500 font-bold mb-4 uppercase text-xs tracking-wider">Official Support</h3>
-          <div className="space-y-3">
+        {/* Support */}
+        <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700">
+          <h3 className="text-orange-500 font-bold mb-4 uppercase text-xs tracking-widest">HQ Support</h3>
+          <div className="space-y-4">
             <div className="flex items-start gap-3">
                <div className="mt-1 text-orange-500"><Phone size={16} /></div>
                <div>
-                 <p className="text-xs text-gray-400">Helpline & Admin</p>
                  <p className="text-white font-bold">9340303098</p>
-                 <p className="text-xs text-gray-500">Mr. Vinay Chandravanshi</p>
+                 <p className="text-[10px] text-slate-500 font-bold">Mr. Vinay Chandravanshi</p>
                </div>
             </div>
             <div className="flex items-center gap-3">
                <div className="text-orange-500"><MapPin size={16} /></div>
-               <p className="text-sm">Main Market, Kawardha (C.G.)</p>
-            </div>
-            <div className="flex items-center gap-3">
-               <div className="text-orange-500"><Mail size={16} /></div>
-               <p className="text-sm">support@roomsaathi.com</p>
+               <p className="text-xs">Main Market, Kawardha (C.G.)</p>
             </div>
           </div>
         </div>
 
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 mt-12 pt-8 border-t border-gray-800 text-center text-xs text-gray-500">
-        <p>&copy; {new Date().getFullYear()} Kawardha Room Saathi Pvt Ltd. All rights reserved.</p>
-        <p className="mt-1">Designed & Managed by Vinay Chandravanshi.</p>
+      <div className="max-w-7xl mx-auto px-4 mt-12 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center text-[10px] font-bold uppercase tracking-widest text-slate-600 gap-4">
+        <p>&copy; {new Date().getFullYear()} Room Saathi Kawardha. All rights reserved.</p>
+        <div className="flex items-center gap-1">
+           Made with <Heart size={10} className="text-red-500 fill-red-500" /> in Kawardha
+        </div>
       </div>
     </footer>
   );
