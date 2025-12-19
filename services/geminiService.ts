@@ -23,8 +23,8 @@ let chatSession: Chat | null = null;
 
 export const getChatSession = (): Chat | null => {
   try {
-    // Safety check for browser environment
-    const apiKey = typeof process !== 'undefined' && process.env ? process.env.API_KEY : '';
+    // Fix: Obtaining API key exclusively from process.env.API_KEY per guidelines
+    const apiKey = process.env.API_KEY;
     
     if (!apiKey) {
       console.warn("API Key missing for Gemini. AI features will not work.");
@@ -32,9 +32,11 @@ export const getChatSession = (): Chat | null => {
     }
 
     if (!chatSession) {
-      const ai = new GoogleGenAI({ apiKey });
+      // Fix: Initializing with new GoogleGenAI({apiKey: process.env.API_KEY}) as per guidelines
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       chatSession = ai.chats.create({
-        model: 'gemini-2.5-flash',
+        // Fix: Use 'gemini-3-flash-preview' for basic text tasks instead of deprecated models
+        model: 'gemini-3-flash-preview',
         config: {
           systemInstruction: SYSTEM_INSTRUCTION,
         },
@@ -54,6 +56,7 @@ export const sendMessageToSaathi = async (message: string): Promise<string> => {
        return "Saathi AI is currently offline (API Key missing). Please contact admin.";
     }
     const result: GenerateContentResponse = await chat.sendMessage({ message });
+    // Fix: Using .text property directly instead of method as per guidelines
     return result.text || "Sorry, I couldn't understand that. Please try again.";
   } catch (error) {
     console.error("Gemini API Error:", error);

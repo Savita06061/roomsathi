@@ -1,9 +1,14 @@
+
 export enum RoomType {
   GIRLS = 'Girls Room',
   SINGLE = 'Single Room',
   FAMILY = 'Family Room',
   BACHELOR = 'Bachelor Room',
 }
+
+export type Language = 'EN' | 'HI';
+
+export type ListingStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
 
 export interface Listing {
   id: string;
@@ -16,7 +21,8 @@ export interface Listing {
   contactNumber: string;
   imageUrl: string;
   isVerified: boolean;
-  ownerId?: string; // To link room to specific owner
+  status: ListingStatus; // New field for approval workflow
+  ownerId?: string;
 }
 
 export interface Booking {
@@ -26,7 +32,7 @@ export interface Booking {
   customerPhone: string;
   status: 'PENDING' | 'APPROVED' | 'REJECTED';
   date: string;
-  listingDetails?: Listing; // For display purposes
+  listingDetails?: Listing;
 }
 
 export interface FilterState {

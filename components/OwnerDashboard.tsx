@@ -1,14 +1,34 @@
+
 import React from 'react';
-import { Listing } from '../types';
-import { Plus, LogOut, Home, Settings } from 'lucide-react';
+import { Listing, Language } from '../types';
+import { Plus, LogOut, Home, Settings, Clock, CheckCircle, XCircle } from 'lucide-react';
+import SubscriptionGate from './SubscriptionGate';
 
 interface OwnerDashboardProps {
   listings: Listing[];
   onAdd: () => void;
   onLogout: () => void;
+  isSubscribed: boolean;
+  onSubscribe: () => void;
+  language: Language;
 }
 
-const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ listings, onAdd, onLogout }) => {
+const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ 
+  listings, onAdd, onLogout, isSubscribed, onSubscribe, language 
+}) => {
+  if (!isSubscribed) {
+    return (
+      <div className="min-h-screen bg-white">
+        <nav className="bg-blue-700 text-white shadow-lg p-4">
+           <button onClick={onLogout} className="flex items-center gap-2 text-sm font-bold">
+              <LogOut size={16} /> Exit Owner Panel
+           </button>
+        </nav>
+        <SubscriptionGate language={language} onSubscribe={onSubscribe} mode="OWNER" />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-blue-700 text-white shadow-lg sticky top-0 z-50">
@@ -48,22 +68,51 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ listings, onAdd, onLogo
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {listings.length > 0 ? (
             listings.map(listing => (
-              <div key={listing.id} className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 flex flex-col">
+              <div key={listing.id} className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 flex flex-col group hover:shadow-lg transition-shadow">
                  <div className="h-40 bg-gray-200 relative">
                     <img src={listing.imageUrl} alt="" className="w-full h-full object-cover" />
-                    <div className="absolute bottom-2 left-2 bg-blue-600 text-white text-xs px-2 py-1 rounded">
+                    
+                    {/* Status Badge Overlay */}
+                    <div className="absolute top-2 right-2">
+                       {listing.status === 'PENDING' && (
+                          <span className="flex items-center gap-1 bg-yellow-500 text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-lg">
+                             <Clock size={10} /> {language === 'HI' ? 'जाँच जारी है' : 'WAITING APPROVAL'}
+                          </span>
+                       )}
+                       {listing.status === 'APPROVED' && (
+                          <span className="flex items-center gap-1 bg-green-500 text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-lg">
+                             <CheckCircle size={10} /> {language === 'HI' ? 'सत्यापित' : 'LIVE & APPROVED'}
+                          </span>
+                       )}
+                       {listing.status === 'REJECTED' && (
+                          <span className="flex items-center gap-1 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-lg">
+                             <XCircle size={10} /> {language === 'HI' ? 'अस्वीकृत' : 'REJECTED'}
+                          </span>
+                       )}
+                    </div>
+
+                    <div className="absolute bottom-2 left-2 bg-blue-600/90 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded">
                       {listing.type}
                     </div>
                  </div>
                  <div className="p-4">
-                    <div className="flex justify-between items-start mb-2">
+                    <div className="flex justify-between items-start mb-1">
                       <h4 className="font-bold text-gray-800">{listing.locality}</h4>
                       <span className="font-bold text-blue-600">₹{listing.rentPrice}</span>
                     </div>
-                    <p className="text-sm text-gray-500 mb-4">{listing.address}</p>
-                    <div className="flex items-center justify-between text-xs text-gray-400 border-t pt-2">
-                       <span>Status: <span className="text-green-600 font-medium">Active</span></span>
-                       <span>ID: {listing.id}</span>
+                    <p className="text-xs text-gray-500 mb-4 line-clamp-1">{listing.address}</p>
+                    
+                    <div className="flex items-center justify-between text-[10px] text-gray-400 border-t pt-2 mt-auto">
+                       <span>
+                          Status: 
+                          <span className={`ml-1 font-bold ${
+                             listing.status === 'APPROVED' ? 'text-green-600' : 
+                             listing.status === 'PENDING' ? 'text-yellow-600' : 'text-red-600'
+                          }`}>
+                             {listing.status}
+                          </span>
+                       </span>
+                       <span className="opacity-50">ID: {listing.id}</span>
                     </div>
                  </div>
               </div>

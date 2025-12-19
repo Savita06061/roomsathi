@@ -1,5 +1,6 @@
+
 import React, { useState } from 'react';
-import { Listing, RoomType } from '../types';
+import { Listing, RoomType, ListingStatus } from '../types';
 import { LOCALITIES } from '../constants';
 import { X, Save } from 'lucide-react';
 
@@ -12,6 +13,7 @@ interface AdminListingFormProps {
 const AdminListingForm: React.FC<AdminListingFormProps> = ({ listing, onClose, onSubmit }) => {
   const isEditing = !!listing;
   
+  // Fix: Added default status to form state to ensure Partial<Listing> includes required fields when merging
   const [formData, setFormData] = useState<Partial<Listing>>(listing || {
     type: RoomType.SINGLE,
     rentPrice: 2000,
@@ -21,7 +23,8 @@ const AdminListingForm: React.FC<AdminListingFormProps> = ({ listing, onClose, o
     contactPerson: '',
     contactNumber: '',
     imageUrl: 'https://picsum.photos/400/300',
-    isVerified: true
+    isVerified: true,
+    status: 'PENDING'
   });
 
   const [amenitiesString, setAmenitiesString] = useState(
@@ -30,6 +33,7 @@ const AdminListingForm: React.FC<AdminListingFormProps> = ({ listing, onClose, o
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // Fix: Added missing 'status' property to satisfy the Listing interface requirement (error on line 33)
     const finalData: Listing = {
       id: listing?.id || Date.now().toString(),
       type: formData.type as RoomType,
@@ -40,7 +44,8 @@ const AdminListingForm: React.FC<AdminListingFormProps> = ({ listing, onClose, o
       contactPerson: formData.contactPerson || 'Owner',
       contactNumber: formData.contactNumber || '',
       imageUrl: formData.imageUrl || '',
-      isVerified: formData.isVerified || false
+      isVerified: formData.isVerified || false,
+      status: (formData.status as ListingStatus) || 'PENDING'
     };
     onSubmit(finalData);
   };

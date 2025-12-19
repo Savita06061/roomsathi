@@ -1,3 +1,4 @@
+
 import { Listing, RoomType } from './types';
 
 export const LOCALITIES = [
@@ -10,7 +11,6 @@ export const LOCALITIES = [
 export const APP_PRIMARY_COLOR = 'orange-600';
 export const APP_SECONDARY_COLOR = 'orange-100';
 
-// Helper function to generate 5 rooms per locality with price 2000
 const generateListings = (): Listing[] => {
   const listings: Listing[] = [];
   let idCounter = 1;
@@ -32,19 +32,19 @@ const generateListings = (): Listing[] => {
   ];
 
   LOCALITIES.forEach((locality) => {
-    // Generate 5 rooms for this locality
     for (let i = 0; i < 5; i++) {
       listings.push({
         id: String(idCounter),
-        type: typesPattern[i], // Cycle through types
-        rentPrice: 2000, // Fixed price as requested
+        type: typesPattern[i],
+        rentPrice: 2000,
         locality: locality,
         address: `${locality}, Lane No. ${i + 1}, House ${10 + i}`,
         amenities: amenitiesOptions[i],
         contactPerson: `Owner Name ${idCounter}`,
         contactNumber: `98271-${10000 + idCounter}`,
         imageUrl: `https://picsum.photos/400/300?random=${idCounter}`,
-        isVerified: i % 2 === 0, // Alternate verification status
+        isVerified: i % 2 === 0,
+        status: 'APPROVED' // Default mock data as approved
       });
       idCounter++;
     }

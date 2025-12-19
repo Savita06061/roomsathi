@@ -12,35 +12,33 @@ import OwnerDashboard from './components/OwnerDashboard';
 import LandingPage from './components/LandingPage';
 import BookingModal from './components/BookingModal';
 import { MOCK_LISTINGS } from './constants';
-import { FilterState, Listing, ViewState, Booking } from './types';
+import { FilterState, Listing, ViewState, Booking, Language, ListingStatus } from './types';
+import { translations } from './translations';
 import { SearchX } from 'lucide-react';
 
 function App() {
-  // App Navigation State
   const [currentView, setCurrentView] = useState<ViewState>('LANDING');
+  const [language, setLanguage] = useState<Language>('HI');
+  const t = translations[language];
 
-  // Application Data State
   const [listings, setListings] = useState<Listing[]>(MOCK_LISTINGS || []);
   const [bookings, setBookings] = useState<Booking[]>([]);
-  
-  // Filtering
   const [filters, setFilters] = useState<FilterState>({
     maxPrice: 8000,
     roomType: 'ALL',
     locality: 'ALL'
   });
   
-  // Customer Subscription State
   const [isSubscribed, setIsSubscribed] = useState(false);
-
-  // Forms & Modals State
+  const [isOwnerSubscribed, setIsOwnerSubscribed] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingListing, setEditingListing] = useState<Listing | null>(null);
-  const [bookingListing, setBookingListing] = useState<Listing | null>(null); // Room user is trying to book
+  const [bookingListing, setBookingListing] = useState<Listing | null>(null);
 
-  // --- LOGIC: LISTINGS ---
   const handleAddListing = (newListing: Listing) => {
-    setListings(prev => [newListing, ...prev]);
+    // New rooms added by owners are PENDING by default
+    const entry = { ...newListing, status: currentView === 'OWNER' ? 'PENDING' : 'APPROVED' };
+    setListings(prev => [entry, ...prev]);
     setShowAddForm(false);
   };
 
@@ -49,16 +47,18 @@ function App() {
     setEditingListing(null);
   };
 
+  const handleUpdateListingStatus = (id: string, status: ListingStatus) => {
+    setListings(prev => prev.map(l => l.id === id ? { ...l, status } : l));
+  };
+
   const handleDeleteListing = (id: string) => {
-    if (confirm('Are you sure you want to delete this room?')) {
+    if (confirm(language === 'HI' ? 'क्या आप वाकई इस कमरे को हटाना चाहते हैं?' : 'Are you sure you want to delete this room?')) {
       setListings(prev => prev.filter(l => l.id !== id));
     }
   };
 
-  // --- LOGIC: BOOKINGS ---
   const handleCreateBooking = (customerName: string, customerPhone: string) => {
     if (!bookingListing) return;
-    
     const newBooking: Booking = {
       id: Date.now().toString(),
       listingId: bookingListing.id,
@@ -67,10 +67,9 @@ function App() {
       status: 'PENDING',
       date: new Date().toISOString()
     };
-    
     setBookings(prev => [newBooking, ...prev]);
     setBookingListing(null);
-    alert('Booking Request Sent! Admin will contact you.');
+    alert(language === 'HI' ? 'बुकिंग अनुरोध भेज दिया गया है! एडमिन आपसे संपर्क करेंगे।' : 'Booking Request Sent! Admin will contact you.');
   };
 
   const handleUpdateBookingStatus = (id: string, status: 'APPROVED' | 'REJECTED') => {
@@ -80,6 +79,9 @@ function App() {
   const filteredListings = useMemo(() => {
     if (!listings) return [];
     return listings.filter(listing => {
+      // ONLY SHOW APPROVED LISTINGS TO CUSTOMERS
+      if (listing.status !== 'APPROVED') return false;
+      
       if (listing.rentPrice > filters.maxPrice) return false;
       if (filters.roomType !== 'ALL' && listing.type !== filters.roomType) return false;
       if (filters.locality !== 'ALL' && listing.locality !== filters.locality) return false;
@@ -87,12 +89,10 @@ function App() {
     });
   }, [filters, listings]);
 
-  // --- RENDER: LANDING PAGE ---
   if (currentView === 'LANDING') {
     return <LandingPage onNavigate={setCurrentView} />;
   }
 
-  // --- RENDER: ADMIN INTERFACE ---
   if (currentView === 'ADMIN') {
     return (
       <>
@@ -102,10 +102,11 @@ function App() {
           onAdd={() => setShowAddForm(true)}
           onEdit={(l) => setEditingListing(l)}
           onDelete={handleDeleteListing}
+          onUpdateListingStatus={handleUpdateListingStatus}
           onUpdateBookingStatus={handleUpdateBookingStatus}
           onLogout={() => setCurrentView('LANDING')}
+          language={language}
         />
-        {/* Shared Form for Admin */}
         {(showAddForm || editingListing) && (
            <AdminListingForm 
             listing={editingListing}
@@ -117,16 +118,17 @@ function App() {
     );
   }
 
-  // --- RENDER: OWNER INTERFACE ---
   if (currentView === 'OWNER') {
     return (
       <>
         <OwnerDashboard 
-          listings={listings} // In real app, filter by owner ID
+          listings={listings}
           onAdd={() => setShowAddForm(true)}
           onLogout={() => setCurrentView('LANDING')}
+          isSubscribed={isOwnerSubscribed}
+          onSubscribe={() => setIsOwnerSubscribed(true)}
+          language={language}
         />
-         {/* Shared Form for Owner (reusing admin form for simplicity) */}
         {showAddForm && (
            <AdminListingForm 
             onClose={() => setShowAddForm(false)} 
@@ -137,22 +139,25 @@ function App() {
     );
   }
 
-  // --- RENDER: CUSTOMER INTERFACE ---
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header 
         onLogout={() => setCurrentView('LANDING')} 
         isSubscribed={isSubscribed}
+        language={language}
+        setLanguage={setLanguage}
       />
       
       {!isSubscribed ? (
-        <SubscriptionGate onSubscribe={() => setIsSubscribed(true)} />
+        <SubscriptionGate onSubscribe={() => setIsSubscribed(true)} language={language} mode="CUSTOMER" />
       ) : (
         <main className="max-w-6xl mx-auto px-4 pt-8 pb-12 flex-grow w-full">
           <div className="mb-8">
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">Find Rooms in Kawardha</h2>
+            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+              {language === 'HI' ? 'कवर्धा में कमरे खोजें' : 'Find Rooms in Kawardha'}
+            </h2>
             <p className="text-gray-500">
-              Browse verified PGs, flats, and rooms. Book directly with confidence.
+              {language === 'HI' ? 'वेरिफाइड पीजी, फ्लैट और कमरे देखें। विश्वास के साथ सीधे बुकिंग करें।' : 'Browse verified PGs, flats, and rooms. Book directly with confidence.'}
             </p>
           </div>
 
@@ -160,7 +165,9 @@ function App() {
 
           <div className="mb-4 flex items-center justify-between">
             <p className="text-sm text-gray-500">
-              Showing <span className="font-bold text-gray-900">{filteredListings.length}</span> premium results
+              {language === 'HI' ? 'कुल ' : 'Showing '} 
+              <span className="font-bold text-gray-900">{filteredListings.length}</span> 
+              {language === 'HI' ? ' परिणाम मिले' : ' premium results'}
             </p>
           </div>
 
@@ -171,7 +178,8 @@ function App() {
                   key={listing.id} 
                   listing={listing} 
                   isAdmin={false} 
-                  onBook={() => setBookingListing(listing)} // Trigger Modal
+                  onBook={() => setBookingListing(listing)}
+                  language={language}
                 />
               ))}
             </div>
@@ -180,15 +188,12 @@ function App() {
               <div className="bg-gray-50 p-6 rounded-full mb-6">
                 <SearchX size={48} className="text-gray-400" />
               </div>
-              <h3 className="text-xl font-bold text-gray-800 mb-2">No rooms found</h3>
-              <p className="text-gray-500 text-sm max-w-xs mx-auto mb-6">
-                We couldn't find any listings matching your specific criteria.
-              </p>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">{t.noRooms}</h3>
               <button 
                 onClick={() => setFilters({ maxPrice: 10000, roomType: 'ALL', locality: 'ALL' })}
                 className="text-orange-600 font-bold hover:underline"
               >
-                Clear Filters
+                {t.clearFilters}
               </button>
             </div>
           )}
@@ -197,7 +202,6 @@ function App() {
 
       <Footer />
 
-      {/* Booking Modal */}
       {bookingListing && (
         <BookingModal 
           listing={bookingListing} 
@@ -206,7 +210,6 @@ function App() {
         />
       )}
 
-      {/* AI Assistant (Only for subscribed customers) */}
       {isSubscribed && <AIAssistant />}
     </div>
   );
