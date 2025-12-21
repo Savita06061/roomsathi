@@ -10,6 +10,16 @@ export type Language = 'EN' | 'HI';
 
 export type ListingStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
 
+export type UserRole = 'ADMIN' | 'CUSTOMER' | 'OWNER';
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  avatar: string;
+  role: UserRole;
+}
+
 export interface Listing {
   id: string;
   type: RoomType;
@@ -21,7 +31,7 @@ export interface Listing {
   contactNumber: string;
   imageUrl: string;
   isVerified: boolean;
-  status: ListingStatus; // New field for approval workflow
+  status: ListingStatus;
   ownerId?: string;
 }
 

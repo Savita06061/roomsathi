@@ -11,14 +11,17 @@ import AdminDashboard from './components/AdminDashboard';
 import OwnerDashboard from './components/OwnerDashboard';
 import LandingPage from './components/LandingPage';
 import BookingModal from './components/BookingModal';
+import AuthModal from './components/AuthModal';
 import { MOCK_LISTINGS } from './constants';
-import { FilterState, Listing, ViewState, Booking, Language, ListingStatus } from './types';
+import { FilterState, Listing, ViewState, Booking, Language, ListingStatus, User, UserRole } from './types';
 import { translations } from './translations';
 import { SearchX } from 'lucide-react';
 
 function App() {
   const [currentView, setCurrentView] = useState<ViewState>('LANDING');
   const [language, setLanguage] = useState<Language>('HI');
+  const [user, setUser] = useState<User | null>(null);
+  const [authMode, setAuthMode] = useState<UserRole | null>(null);
   const t = translations[language];
 
   const [listings, setListings] = useState<Listing[]>(MOCK_LISTINGS || []);
@@ -35,9 +38,33 @@ function App() {
   const [editingListing, setEditingListing] = useState<Listing | null>(null);
   const [bookingListing, setBookingListing] = useState<Listing | null>(null);
 
+  const handleLoginSuccess = (loggedInUser: User) => {
+    setUser(loggedInUser);
+    // Strict Routing based on USER ROLE, not just the clicked button
+    if (loggedInUser.role === 'ADMIN') {
+      setCurrentView('ADMIN');
+    } else if (loggedInUser.role === 'OWNER') {
+      setCurrentView('OWNER');
+    } else {
+      setCurrentView('CUSTOMER');
+    }
+    setAuthMode(null);
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    setCurrentView('LANDING');
+    setIsSubscribed(false);
+    setIsOwnerSubscribed(false);
+    setAuthMode(null);
+  };
+
+  // Fix: Explicitly cast status to ListingStatus to resolve type widening error and satisfy Listing interface
   const handleAddListing = (newListing: Listing) => {
-    // New rooms added by owners are PENDING by default
-    const entry = { ...newListing, status: currentView === 'OWNER' ? 'PENDING' : 'APPROVED' };
+    const entry: Listing = { 
+      ...newListing, 
+      status: (currentView === 'OWNER' ? 'PENDING' : 'APPROVED') as ListingStatus 
+    };
     setListings(prev => [entry, ...prev]);
     setShowAddForm(false);
   };
@@ -79,9 +106,7 @@ function App() {
   const filteredListings = useMemo(() => {
     if (!listings) return [];
     return listings.filter(listing => {
-      // ONLY SHOW APPROVED LISTINGS TO CUSTOMERS
       if (listing.status !== 'APPROVED') return false;
-      
       if (listing.rentPrice > filters.maxPrice) return false;
       if (filters.roomType !== 'ALL' && listing.type !== filters.roomType) return false;
       if (filters.locality !== 'ALL' && listing.locality !== filters.locality) return false;
@@ -89,129 +114,114 @@ function App() {
     });
   }, [filters, listings]);
 
-  if (currentView === 'LANDING') {
-    return <LandingPage onNavigate={setCurrentView} />;
-  }
+  // PROTECTION: If user tries to access a view they aren't authorized for
+  const renderView = () => {
+    if (currentView === 'LANDING') {
+      return (
+        <LandingPage 
+          onNavigate={setCurrentView} 
+          onLoginCustomer={() => setAuthMode('CUSTOMER')} 
+          onLoginOwner={() => setAuthMode('OWNER')}
+          onLoginAdmin={() => setAuthMode('ADMIN')}
+          user={user} 
+        />
+      );
+    }
 
-  if (currentView === 'ADMIN') {
-    return (
-      <>
+    if (currentView === 'ADMIN') {
+      if (user?.role !== 'ADMIN') {
+        setCurrentView('LANDING');
+        return null;
+      }
+      return (
         <AdminDashboard 
-          listings={listings}
-          bookings={bookings}
+          listings={listings} bookings={bookings}
           onAdd={() => setShowAddForm(true)}
           onEdit={(l) => setEditingListing(l)}
           onDelete={handleDeleteListing}
           onUpdateListingStatus={handleUpdateListingStatus}
           onUpdateBookingStatus={handleUpdateBookingStatus}
-          onLogout={() => setCurrentView('LANDING')}
+          onLogout={handleLogout}
           language={language}
         />
-        {(showAddForm || editingListing) && (
-           <AdminListingForm 
-            listing={editingListing}
-            onClose={() => { setShowAddForm(false); setEditingListing(null); }} 
-            onSubmit={editingListing ? handleUpdateListing : handleAddListing} 
-           />
-        )}
-      </>
-    );
-  }
+      );
+    }
 
-  if (currentView === 'OWNER') {
-    return (
-      <>
+    if (currentView === 'OWNER') {
+      if (user?.role !== 'OWNER' && user?.role !== 'ADMIN') {
+        setCurrentView('LANDING');
+        return null;
+      }
+      return (
         <OwnerDashboard 
           listings={listings}
           onAdd={() => setShowAddForm(true)}
-          onLogout={() => setCurrentView('LANDING')}
+          onLogout={handleLogout}
           isSubscribed={isOwnerSubscribed}
           onSubscribe={() => setIsOwnerSubscribed(true)}
           language={language}
+          user={user}
         />
-        {showAddForm && (
-           <AdminListingForm 
-            onClose={() => setShowAddForm(false)} 
-            onSubmit={handleAddListing} 
-           />
+      );
+    }
+
+    // Default: CUSTOMER View
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col">
+        <Header onLogout={handleLogout} user={user} language={language} setLanguage={setLanguage} />
+        {!isSubscribed ? (
+          <SubscriptionGate onSubscribe={() => setIsSubscribed(true)} language={language} mode="CUSTOMER" />
+        ) : (
+          <main className="max-w-6xl mx-auto px-4 pt-8 pb-12 flex-grow w-full">
+            <div className="mb-8">
+              <h2 className="text-3xl font-bold text-gray-800 mb-2">{language === 'HI' ? 'कवर्धा में कमरे खोजें' : 'Find Rooms in Kawardha'}</h2>
+              <p className="text-gray-500">{language === 'HI' ? 'वेरिफाइड पीजी, फ्लैट और कमरे देखें।' : 'Browse verified rooms.'}</p>
+            </div>
+            <FilterBar filters={filters} setFilters={setFilters} />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
+              {filteredListings.length > 0 ? (
+                filteredListings.map(listing => (
+                  <ListingCard key={listing.id} listing={listing} onBook={() => setBookingListing(listing)} language={language} />
+                ))
+              ) : (
+                <div className="col-span-full py-20 text-center"><SearchX className="mx-auto text-gray-300 mb-2" size={48} /><h3 className="font-bold">No rooms found.</h3></div>
+              )}
+            </div>
+          </main>
         )}
-      </>
+        <Footer />
+        {isSubscribed && <AIAssistant />}
+      </div>
     );
-  }
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <Header 
-        onLogout={() => setCurrentView('LANDING')} 
-        isSubscribed={isSubscribed}
-        language={language}
-        setLanguage={setLanguage}
-      />
+    <>
+      {renderView()}
       
-      {!isSubscribed ? (
-        <SubscriptionGate onSubscribe={() => setIsSubscribed(true)} language={language} mode="CUSTOMER" />
-      ) : (
-        <main className="max-w-6xl mx-auto px-4 pt-8 pb-12 flex-grow w-full">
-          <div className="mb-8">
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">
-              {language === 'HI' ? 'कवर्धा में कमरे खोजें' : 'Find Rooms in Kawardha'}
-            </h2>
-            <p className="text-gray-500">
-              {language === 'HI' ? 'वेरिफाइड पीजी, फ्लैट और कमरे देखें। विश्वास के साथ सीधे बुकिंग करें।' : 'Browse verified PGs, flats, and rooms. Book directly with confidence.'}
-            </p>
-          </div>
-
-          <FilterBar filters={filters} setFilters={setFilters} />
-
-          <div className="mb-4 flex items-center justify-between">
-            <p className="text-sm text-gray-500">
-              {language === 'HI' ? 'कुल ' : 'Showing '} 
-              <span className="font-bold text-gray-900">{filteredListings.length}</span> 
-              {language === 'HI' ? ' परिणाम मिले' : ' premium results'}
-            </p>
-          </div>
-
-          {filteredListings.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredListings.map(listing => (
-                <ListingCard 
-                  key={listing.id} 
-                  listing={listing} 
-                  isAdmin={false} 
-                  onBook={() => setBookingListing(listing)}
-                  language={language}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-16 text-center flex flex-col items-center">
-              <div className="bg-gray-50 p-6 rounded-full mb-6">
-                <SearchX size={48} className="text-gray-400" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-800 mb-2">{t.noRooms}</h3>
-              <button 
-                onClick={() => setFilters({ maxPrice: 10000, roomType: 'ALL', locality: 'ALL' })}
-                className="text-orange-600 font-bold hover:underline"
-              >
-                {t.clearFilters}
-              </button>
-            </div>
-          )}
-        </main>
+      {authMode && (
+        <AuthModal 
+          mode={authMode} language={language} 
+          onClose={() => setAuthMode(null)} 
+          onLoginSuccess={handleLoginSuccess} 
+        />
       )}
 
-      <Footer />
+      {(showAddForm || editingListing) && (
+        <AdminListingForm 
+          listing={editingListing}
+          onClose={() => { setShowAddForm(false); setEditingListing(null); }} 
+          onSubmit={editingListing ? handleUpdateListing : handleAddListing} 
+        />
+      )}
 
       {bookingListing && (
         <BookingModal 
-          listing={bookingListing} 
-          onClose={() => setBookingListing(null)} 
+          listing={bookingListing} onClose={() => setBookingListing(null)} 
           onConfirm={handleCreateBooking}
         />
       )}
-
-      {isSubscribed && <AIAssistant />}
-    </div>
+    </>
   );
 }
 

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Listing, Language } from '../types';
+import { Listing, Language, User } from '../types';
 import { Plus, LogOut, Home, Settings, Clock, CheckCircle, XCircle } from 'lucide-react';
 import SubscriptionGate from './SubscriptionGate';
 
@@ -11,10 +11,11 @@ interface OwnerDashboardProps {
   isSubscribed: boolean;
   onSubscribe: () => void;
   language: Language;
+  user: User | null;
 }
 
 const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ 
-  listings, onAdd, onLogout, isSubscribed, onSubscribe, language 
+  listings, onAdd, onLogout, isSubscribed, onSubscribe, language, user 
 }) => {
   if (!isSubscribed) {
     return (
@@ -40,9 +41,17 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
                <p className="text-xs text-blue-200">Kawardha Room Saathi</p>
             </div>
           </div>
-          <button onClick={onLogout} className="flex items-center gap-1 text-sm bg-blue-800 hover:bg-blue-900 px-3 py-1.5 rounded-lg transition-colors">
-            <LogOut size={14} /> Logout
-          </button>
+          <div className="flex items-center gap-4">
+            {user && (
+              <div className="hidden sm:flex items-center gap-2 bg-blue-800 px-3 py-1 rounded-full">
+                <img src={user.avatar} alt="" className="w-5 h-5 rounded-full" />
+                <span className="text-xs font-bold">{user.name}</span>
+              </div>
+            )}
+            <button onClick={onLogout} className="flex items-center gap-1 text-sm bg-blue-800 hover:bg-blue-900 px-3 py-1.5 rounded-lg transition-colors">
+              <LogOut size={14} /> Logout
+            </button>
+          </div>
         </div>
       </nav>
 
@@ -50,7 +59,9 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
         
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8 text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-gray-800">Welcome, Landlord!</h2>
+            <h2 className="text-2xl font-bold text-gray-800">
+              {language === 'HI' ? `नमस्ते, ${user?.name?.split(' ')[0]}!` : `Welcome, ${user?.name?.split(' ')[0]}!`}
+            </h2>
             <p className="text-gray-600">List your rooms here. Admin will verify them.</p>
           </div>
           <button 
