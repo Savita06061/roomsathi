@@ -1,5 +1,5 @@
-
 import React, { useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import FilterBar from './components/FilterBar';
@@ -59,7 +59,6 @@ function App() {
     setAuthMode(null);
   };
 
-  // Fix: Explicitly cast status to ListingStatus to resolve type widening error and satisfy Listing interface
   const handleAddListing = (newListing: Listing) => {
     const entry: Listing = { 
       ...newListing, 
@@ -114,17 +113,26 @@ function App() {
     });
   }, [filters, listings]);
 
-  // PROTECTION: If user tries to access a view they aren't authorized for
   const renderView = () => {
     if (currentView === 'LANDING') {
       return (
-        <LandingPage 
-          onNavigate={setCurrentView} 
-          onLoginCustomer={() => setAuthMode('CUSTOMER')} 
-          onLoginOwner={() => setAuthMode('OWNER')}
-          onLoginAdmin={() => setAuthMode('ADMIN')}
-          user={user} 
-        />
+        <motion.div
+          key="landing"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <LandingPage 
+            onNavigate={setCurrentView} 
+            onLoginCustomer={() => setAuthMode('CUSTOMER')} 
+            onLoginOwner={() => setAuthMode('OWNER')}
+            onLoginAdmin={() => setAuthMode('ADMIN')}
+            user={user} 
+            language={language}
+            setLanguage={setLanguage}
+          />
+        </motion.div>
       );
     }
 
@@ -134,16 +142,23 @@ function App() {
         return null;
       }
       return (
-        <AdminDashboard 
-          listings={listings} bookings={bookings}
-          onAdd={() => setShowAddForm(true)}
-          onEdit={(l) => setEditingListing(l)}
-          onDelete={handleDeleteListing}
-          onUpdateListingStatus={handleUpdateListingStatus}
-          onUpdateBookingStatus={handleUpdateBookingStatus}
-          onLogout={handleLogout}
-          language={language}
-        />
+        <motion.div
+          key="admin"
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -50 }}
+        >
+          <AdminDashboard 
+            listings={listings} bookings={bookings}
+            onAdd={() => setShowAddForm(true)}
+            onEdit={(l) => setEditingListing(l)}
+            onDelete={handleDeleteListing}
+            onUpdateListingStatus={handleUpdateListingStatus}
+            onUpdateBookingStatus={handleUpdateBookingStatus}
+            onLogout={handleLogout}
+            language={language}
+          />
+        </motion.div>
       );
     }
 
@@ -153,75 +168,130 @@ function App() {
         return null;
       }
       return (
-        <OwnerDashboard 
-          listings={listings}
-          onAdd={() => setShowAddForm(true)}
-          onLogout={handleLogout}
-          isSubscribed={isOwnerSubscribed}
-          onSubscribe={() => setIsOwnerSubscribed(true)}
-          language={language}
-          user={user}
-        />
+        <motion.div
+          key="owner"
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -50 }}
+        >
+          <OwnerDashboard 
+            listings={listings}
+            onAdd={() => setShowAddForm(true)}
+            onLogout={handleLogout}
+            isSubscribed={isOwnerSubscribed}
+            onSubscribe={() => setIsOwnerSubscribed(true)}
+            language={language}
+            user={user}
+          />
+        </motion.div>
       );
     }
 
     // Default: CUSTOMER View
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col">
+      <motion.div 
+        key="customer"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="min-h-screen bg-gray-50 flex flex-col"
+      >
         <Header onLogout={handleLogout} user={user} language={language} setLanguage={setLanguage} />
-        {!isSubscribed ? (
-          <SubscriptionGate onSubscribe={() => setIsSubscribed(true)} language={language} mode="CUSTOMER" />
-        ) : (
-          <main className="max-w-6xl mx-auto px-4 pt-8 pb-12 flex-grow w-full">
-            <div className="mb-8">
-              <h2 className="text-3xl font-bold text-gray-800 mb-2">{language === 'HI' ? 'कवर्धा में कमरे खोजें' : 'Find Rooms in Kawardha'}</h2>
-              <p className="text-gray-500">{language === 'HI' ? 'वेरिफाइड पीजी, फ्लैट और कमरे देखें।' : 'Browse verified rooms.'}</p>
-            </div>
-            <FilterBar filters={filters} setFilters={setFilters} />
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
-              {filteredListings.length > 0 ? (
-                filteredListings.map(listing => (
-                  <ListingCard key={listing.id} listing={listing} onBook={() => setBookingListing(listing)} language={language} />
-                ))
-              ) : (
-                <div className="col-span-full py-20 text-center"><SearchX className="mx-auto text-gray-300 mb-2" size={48} /><h3 className="font-bold">No rooms found.</h3></div>
-              )}
-            </div>
-          </main>
-        )}
+        <AnimatePresence mode="wait">
+          {!isSubscribed ? (
+            <motion.div
+              key="subscription"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+            >
+              <SubscriptionGate onSubscribe={() => setIsSubscribed(true)} language={language} mode="CUSTOMER" />
+            </motion.div>
+          ) : (
+            <motion.main 
+              key="listings"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="max-w-6xl mx-auto px-4 pt-8 pb-12 flex-grow w-full"
+            >
+              <div className="mb-8">
+                <h2 className="text-3xl font-bold text-gray-800 mb-2">{language === 'HI' ? 'कवर्धा में कमरे खोजें' : 'Find Rooms in Kawardha'}</h2>
+                <p className="text-gray-500">{language === 'HI' ? 'वेरिफाइड पीजी, फ्लैट और कमरे देखें।' : 'Browse verified rooms.'}</p>
+              </div>
+              <FilterBar filters={filters} setFilters={setFilters} />
+              <motion.div 
+                layout
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8"
+              >
+                <AnimatePresence mode="popLayout">
+                  {filteredListings.length > 0 ? (
+                    filteredListings.map(listing => (
+                      <motion.div
+                        key={listing.id}
+                        layout
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        whileHover={{ y: -5 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <ListingCard listing={listing} onBook={() => setBookingListing(listing)} language={language} />
+                      </motion.div>
+                    ))
+                  ) : (
+                    <motion.div 
+                      key="no-results"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="col-span-full py-20 text-center"
+                    >
+                      <SearchX className="mx-auto text-gray-300 mb-2" size={48} />
+                      <h3 className="font-bold">No rooms found.</h3>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            </motion.main>
+          )}
+        </AnimatePresence>
         <Footer />
         {isSubscribed && <AIAssistant />}
-      </div>
+        
+        {/* Modals */}
+        <AnimatePresence>
+          {authMode && (
+            <AuthModal 
+              mode={authMode} 
+              onClose={() => setAuthMode(null)} 
+              onSuccess={handleLoginSuccess}
+              language={language}
+            />
+          )}
+          {bookingListing && (
+            <BookingModal 
+              listing={bookingListing} 
+              onClose={() => setBookingListing(null)} 
+              onConfirm={handleCreateBooking}
+              language={language}
+            />
+          )}
+          {(showAddForm || editingListing) && (
+            <AdminListingForm 
+              listing={editingListing || undefined}
+              onClose={() => { setShowAddForm(false); setEditingListing(null); }}
+              onSave={editingListing ? handleUpdateListing : handleAddListing}
+              language={language}
+            />
+          )}
+        </AnimatePresence>
+      </motion.div>
     );
   };
 
   return (
-    <>
+    <AnimatePresence mode="wait">
       {renderView()}
-      
-      {authMode && (
-        <AuthModal 
-          mode={authMode} language={language} 
-          onClose={() => setAuthMode(null)} 
-          onLoginSuccess={handleLoginSuccess} 
-        />
-      )}
-
-      {(showAddForm || editingListing) && (
-        <AdminListingForm 
-          listing={editingListing}
-          onClose={() => { setShowAddForm(false); setEditingListing(null); }} 
-          onSubmit={editingListing ? handleUpdateListing : handleAddListing} 
-        />
-      )}
-
-      {bookingListing && (
-        <BookingModal 
-          listing={bookingListing} onClose={() => setBookingListing(null)} 
-          onConfirm={handleCreateBooking}
-        />
-      )}
-    </>
+    </AnimatePresence>
   );
 }
 

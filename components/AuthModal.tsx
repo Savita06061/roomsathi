@@ -1,6 +1,6 @@
-
 import React, { useState } from 'react';
-import { X, Mail, Lock, User, Key, ShieldCheck, UserCheck, Home, Settings, Loader2, CheckCircle2, ShieldAlert } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { X, Mail, Lock, User, Key, ShieldCheck, UserCheck, Home, Settings, Loader2, CheckCircle2, ShieldAlert, Fingerprint } from 'lucide-react';
 import { Language, User as UserType, UserRole } from '../types';
 import { translations } from '../translations';
 
@@ -103,134 +103,212 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLoginSuccess, language
   const portalTitle = isAdmin ? 'Admin Control' : isCustomer ? 'Tenant' : 'Property Owner';
 
   return (
-    <div className="fixed inset-0 bg-slate-900/80 z-[100] flex items-center justify-center p-4 backdrop-blur-xl animate-in fade-in duration-300">
-      <div className="bg-white rounded-[2.5rem] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.3)] max-w-lg w-full overflow-hidden border border-white/20">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-slate-900/60 z-[100] flex items-center justify-center p-4 backdrop-blur-md"
+    >
+      <motion.div 
+        initial={{ scale: 0.9, y: 20 }}
+        animate={{ scale: 1, y: 0 }}
+        exit={{ scale: 0.9, y: 20 }}
+        className="bg-white rounded-[3rem] shadow-2xl max-w-lg w-full overflow-hidden border border-white/20 flex flex-col"
+      >
         
         {/* Modern Header Section */}
-        <div className={`${accentColor} p-10 text-white relative overflow-hidden`}>
+        <div className={`${accentColor} p-12 text-white relative overflow-hidden`}>
           <div className="relative z-10">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="bg-white/10 p-2.5 rounded-2xl backdrop-blur-md border border-white/20">
-                {isAdmin ? <Settings size={24} /> : isCustomer ? <UserCheck size={24} /> : <Home size={24} />}
-              </div>
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] bg-white/10 px-3 py-1 rounded-full border border-white/10">
-                Secure Portal
+            <div className="flex items-center gap-4 mb-6">
+              <motion.div 
+                whileHover={{ rotate: 15 }}
+                className="bg-white/10 p-3 rounded-2xl backdrop-blur-md border border-white/20"
+              >
+                {isAdmin ? <Settings size={28} /> : isCustomer ? <UserCheck size={28} /> : <Home size={28} />}
+              </motion.div>
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] bg-white/10 px-4 py-1.5 rounded-full border border-white/10">
+                Secure Protocol
               </span>
             </div>
-            <h3 className="text-4xl font-black tracking-tight mb-2">
-              {step === 'LOGIN' ? 'Welcome Back' : step === 'SIGNUP' ? 'Join the Network' : 'Security Check'}
+            <h3 className="text-5xl font-black tracking-tighter mb-2 leading-none">
+              {step === 'LOGIN' ? 'Welcome Back' : step === 'SIGNUP' ? 'Join Network' : 'Security Check'}
             </h3>
-            <p className="text-white/60 text-sm font-medium">
+            <p className="text-white/50 text-xs font-black uppercase tracking-widest mt-4">
               Authorized access for <span className="text-white underline decoration-orange-500 underline-offset-4">{portalTitle}</span>
             </p>
           </div>
           
           {/* Decorative Elements */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32 blur-3xl"></div>
-          <button onClick={onClose} className="absolute top-8 right-8 p-3 bg-white/10 hover:bg-white/20 rounded-full transition-all border border-white/10">
+          <motion.button 
+            whileHover={{ rotate: 90, backgroundColor: 'rgba(255,255,255,0.2)' }}
+            whileTap={{ scale: 0.9 }}
+            onClick={onClose} 
+            className="absolute top-8 right-8 p-3 bg-white/10 rounded-full transition-all border border-white/10"
+          >
             <X size={20} />
-          </button>
+          </motion.button>
         </div>
 
-        <div className="p-10">
-          {step === 'LOGIN' && (
-            <form onSubmit={handleLoginSubmit} className="space-y-6">
-              <div className="space-y-1">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Official Gmail</label>
-                <div className="relative group">
-                  <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-orange-500 transition-colors" size={20} />
-                  <input 
-                    type="email" required value={email} onChange={e => setEmail(e.target.value)}
-                    className="w-full pl-14 pr-6 py-5 bg-slate-50 border-2 border-slate-100 rounded-[1.5rem] focus:border-orange-500 focus:bg-white outline-none font-bold text-slate-800 transition-all"
-                    placeholder="example@gmail.com"
+        <div className="p-12">
+          <AnimatePresence mode="wait">
+            {step === 'LOGIN' && (
+              <motion.form 
+                key="login"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                onSubmit={handleLoginSubmit} 
+                className="space-y-8"
+              >
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Official Gmail Vector</label>
+                  <div className="relative group">
+                    <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-orange-500 transition-colors" size={20} />
+                    <input 
+                      type="email" required value={email} onChange={e => setEmail(e.target.value)}
+                      className="w-full pl-14 pr-6 py-5 bg-slate-50 border-2 border-slate-50 rounded-2xl focus:border-orange-600 focus:bg-white outline-none font-bold text-slate-900 transition-all"
+                      placeholder="example@gmail.com"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Secure Password</label>
+                  <div className="relative group">
+                    <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-orange-500 transition-colors" size={20} />
+                    <input 
+                      type="password" required value={password} onChange={e => setPassword(e.target.value)}
+                      className="w-full pl-14 pr-6 py-5 bg-slate-50 border-2 border-slate-50 rounded-2xl focus:border-orange-600 focus:bg-white outline-none font-bold text-slate-900 transition-all"
+                      placeholder="••••••••"
+                    />
+                  </div>
+                </div>
+                <motion.button 
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="submit" 
+                  className={`w-full ${accentColor} text-white py-6 rounded-2xl font-black text-lg shadow-2xl shadow-slate-200 flex items-center justify-center gap-3 transition-all`}
+                >
+                  {isLoading ? <Loader2 className="animate-spin" /> : (
+                    <>
+                      <Fingerprint size={24} />
+                      Continue to Dashboard
+                    </>
+                  )}
+                </motion.button>
+                <div className="flex items-center justify-center gap-4 pt-4">
+                  <div className="h-px flex-1 bg-slate-100"></div>
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                    New here? <button type="button" onClick={() => setStep('SIGNUP')} className="text-orange-600 hover:underline">Register Account</button>
+                  </p>
+                  <div className="h-px flex-1 bg-slate-100"></div>
+                </div>
+              </motion.form>
+            )}
+
+            {step === 'SIGNUP' && (
+              <motion.form 
+                key="signup"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                onSubmit={handleSignupSubmit} 
+                className="space-y-6"
+              >
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Identity Name</label>
+                  <input type="text" required value={name} onChange={e => setName(e.target.value)} placeholder="Username / Business Name" className="w-full p-5 bg-slate-50 border-2 border-slate-50 rounded-2xl font-bold focus:border-orange-600 outline-none transition-all" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Primary Gmail</label>
+                  <input type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="example@gmail.com" className="w-full p-5 bg-slate-50 border-2 border-slate-50 rounded-2xl font-bold focus:border-orange-600 outline-none transition-all" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Create Password</label>
+                  <input type="password" required value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" className="w-full p-5 bg-slate-50 border-2 border-slate-50 rounded-2xl font-bold focus:border-orange-600 outline-none transition-all" />
+                </div>
+                <motion.button 
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="submit" 
+                  className={`w-full ${accentColor} text-white py-6 rounded-2xl font-black text-lg shadow-2xl flex items-center justify-center gap-3 transition-all`}
+                >
+                  <Mail size={24} />
+                  {language === 'HI' ? 'OTP प्राप्त करें' : 'Verify via Gmail OTP'}
+                </motion.button>
+                <button type="button" onClick={() => setStep('LOGIN')} className="w-full text-center text-[10px] text-slate-400 font-black uppercase tracking-widest mt-4">Already have access?</button>
+              </motion.form>
+            )}
+
+            {step === 'SENDING_OTP' && (
+              <motion.div 
+                key="sending"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="py-20 flex flex-col items-center text-center space-y-8"
+              >
+                <div className="relative">
+                  <motion.div 
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                    className="w-24 h-24 border-4 border-orange-100 border-t-orange-600 rounded-full"
                   />
+                  <Mail className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-orange-600" size={32} />
                 </div>
-              </div>
-              <div className="space-y-1">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Password</label>
-                <div className="relative group">
-                  <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-orange-500 transition-colors" size={20} />
-                  <input 
-                    type="password" required value={password} onChange={e => setPassword(e.target.value)}
-                    className="w-full pl-14 pr-6 py-5 bg-slate-50 border-2 border-slate-100 rounded-[1.5rem] focus:border-orange-500 focus:bg-white outline-none font-bold text-slate-800 transition-all"
-                    placeholder="••••••••"
-                  />
+                <div>
+                  <h4 className="text-3xl font-black text-slate-900 mb-2 tracking-tighter">Authenticating Email</h4>
+                  <p className="text-sm text-slate-400 font-bold max-w-[240px] mx-auto">Sending a 6-digit secure code to <span className="text-slate-900">{email}</span></p>
                 </div>
-              </div>
-              <button type="submit" className={`w-full ${accentColor} text-white py-5 rounded-[1.5rem] font-black text-xl shadow-2xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3`}>
-                {isLoading ? <Loader2 className="animate-spin" /> : 'Continue to Dashboard'}
-              </button>
-              <div className="flex items-center justify-center gap-2 pt-2">
-                <div className="h-px w-8 bg-slate-100"></div>
-                <p className="text-xs font-bold text-slate-400">
-                  New here? <button type="button" onClick={() => setStep('SIGNUP')} className="text-orange-600 hover:underline">Register Account</button>
-                </p>
-                <div className="h-px w-8 bg-slate-100"></div>
-              </div>
-            </form>
-          )}
+              </motion.div>
+            )}
 
-          {step === 'SIGNUP' && (
-            <form onSubmit={handleSignupSubmit} className="space-y-4">
-              <input type="text" required value={name} onChange={e => setName(e.target.value)} placeholder="Username / Business Name" className="w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-[1.5rem] font-bold focus:border-orange-500 outline-none transition-all" />
-              <input type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="Primary Gmail" className="w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-[1.5rem] font-bold focus:border-orange-500 outline-none transition-all" />
-              <input type="password" required value={password} onChange={e => setPassword(e.target.value)} placeholder="Create Secure Password" className="w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-[1.5rem] font-bold focus:border-orange-500 outline-none transition-all" />
-              <button type="submit" className={`w-full ${accentColor} text-white py-5 rounded-[1.5rem] font-black text-xl shadow-xl flex items-center justify-center gap-2`}>
-                {language === 'HI' ? 'OTP प्राप्त करें' : 'Verify via Gmail OTP'}
-              </button>
-              <button type="button" onClick={() => setStep('LOGIN')} className="w-full text-center text-xs text-slate-400 font-bold uppercase tracking-widest mt-4">Already have access?</button>
-            </form>
-          )}
-
-          {step === 'SENDING_OTP' && (
-            <div className="py-20 flex flex-col items-center text-center space-y-6 animate-pulse">
-              <div className="relative">
-                <Loader2 className="w-16 h-16 text-orange-600 animate-spin" />
-                <Mail className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-orange-600" size={20} />
-              </div>
-              <div>
-                <h4 className="text-xl font-black text-slate-800 mb-1">Authenticating Email</h4>
-                <p className="text-sm text-slate-400 font-medium max-w-[240px] mx-auto">Sending a 6-digit secure code to <span className="text-slate-900 font-bold">{email}</span></p>
-              </div>
-            </div>
-          )}
-
-          {step === 'OTP' && (
-            <div className="space-y-10 text-center animate-in zoom-in-95 duration-300">
-              <div className="bg-orange-50 p-6 rounded-[2rem] border border-orange-100 inline-flex items-center gap-3">
-                <ShieldCheck className="text-orange-600" size={24} />
-                <p className="text-xs font-bold text-orange-800">
-                  {language === 'HI' ? 'हमने आपकी आईडी पर सुरक्षा कोड भेजा है।' : 'One-time security code sent to your Gmail.'}
-                </p>
-              </div>
-              <div className="flex justify-between gap-3 max-w-xs mx-auto">
-                {otp.map((d, i) => (
-                  <input key={i} id={`otp-${i}`} type="text" maxLength={1} value={d} onChange={e => handleOtpChange(i, e.target.value)} className="w-14 h-16 text-center text-3xl font-black border-2 border-slate-100 bg-slate-50 rounded-2xl focus:border-orange-500 focus:bg-white outline-none transition-all shadow-inner" />
-                ))}
-              </div>
-              <div className="flex flex-col gap-6">
-                <div className="flex items-center justify-center gap-2 text-[10px] text-slate-300 font-black uppercase tracking-widest">
-                  <ShieldAlert size={12} /> Sandbox Mode: Use 123456
+            {step === 'OTP' && (
+              <motion.div 
+                key="otp"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="space-y-12 text-center"
+              >
+                <div className="bg-orange-50 p-6 rounded-3xl border border-orange-100 inline-flex items-center gap-4">
+                  <ShieldCheck className="text-orange-600" size={28} />
+                  <p className="text-[10px] font-black text-orange-800 uppercase tracking-widest text-left leading-relaxed">
+                    {language === 'HI' ? 'हमने आपकी आईडी पर सुरक्षा कोड भेजा है।' : 'One-time security code sent to your Gmail.'}
+                  </p>
                 </div>
-                <button onClick={handleVerifyOtp} className={`w-full ${accentColor} text-white py-5 rounded-[1.5rem] font-black text-xl shadow-2xl transition-all`}>
-                  Verify & Access Portal
-                </button>
-                <button onClick={() => setStep('SIGNUP')} className="text-xs font-bold text-slate-400 hover:text-slate-900 transition-colors">Resend Verification Code</button>
-              </div>
-            </div>
-          )}
+                <div className="flex justify-between gap-3 max-w-xs mx-auto">
+                  {otp.map((d, i) => (
+                    <input key={i} id={`otp-${i}`} type="text" maxLength={1} value={d} onChange={e => handleOtpChange(i, e.target.value)} className="w-12 h-16 text-center text-3xl font-black border-2 border-slate-50 bg-slate-50 rounded-2xl focus:border-orange-600 focus:bg-white outline-none transition-all shadow-inner" />
+                  ))}
+                </div>
+                <div className="flex flex-col gap-6 pt-4">
+                  <div className="flex items-center justify-center gap-3 text-[10px] text-slate-300 font-black uppercase tracking-widest">
+                    <ShieldAlert size={14} /> Sandbox Mode: Use 123456
+                  </div>
+                  <motion.button 
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleVerifyOtp} 
+                    className={`w-full ${accentColor} text-white py-6 rounded-2xl font-black text-lg shadow-2xl transition-all`}
+                  >
+                    Verify & Access Portal
+                  </motion.button>
+                  <button onClick={() => setStep('SIGNUP')} className="text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-slate-900 transition-colors">Resend Verification Code</button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
         
         {/* Footer Trust Bar */}
-        <div className="bg-slate-50 p-6 flex justify-center items-center gap-8 border-t border-slate-100 grayscale opacity-50">
-           <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI" className="h-4" />
-           <div className="flex items-center gap-2">
-             <ShieldCheck size={16} />
-             <span className="text-[10px] font-black uppercase tracking-widest">256-bit AES Encrypted</span>
+        <div className="bg-slate-50 p-8 flex justify-center items-center gap-10 border-t border-slate-100 grayscale opacity-40">
+           <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI" className="h-5" />
+           <div className="flex items-center gap-3">
+             <ShieldCheck size={20} />
+             <span className="text-[10px] font-black uppercase tracking-[0.3em]">256-bit AES Encrypted</span>
            </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

@@ -1,6 +1,6 @@
-
-import React, { useState } from 'react';
-import { Home, Languages, ArrowRight, ShieldCheck, Users, MapPin, Lock, LogIn, Building, Settings, CheckCircle2, PhoneCall, Sparkles, Map, HeartHandshake, Zap } from 'lucide-react';
+import React from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Home, Languages, ArrowRight, ShieldCheck, Users, MapPin, Lock, Settings, PhoneCall, Map, Zap, Star, ShieldAlert, Clock } from 'lucide-react';
 import { ViewState, Language, User } from '../types';
 import { translations } from '../translations';
 import Footer from './Footer';
@@ -11,188 +11,241 @@ interface LandingPageProps {
   onLoginOwner: () => void;
   onLoginAdmin: () => void;
   user: User | null;
+  language: Language;
+  setLanguage: (lang: Language) => void;
 }
 
-const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onLoginCustomer, onLoginOwner, onLoginAdmin, user }) => {
-  const [lang, setLang] = useState<Language>('HI');
-  const t = translations[lang];
+const LandingPage: React.FC<LandingPageProps> = ({ 
+  onNavigate, onLoginCustomer, onLoginOwner, onLoginAdmin, user, language, setLanguage 
+}) => {
+  const t = translations[language];
 
   return (
     <div className="min-h-screen bg-white flex flex-col font-sans selection:bg-orange-100 selection:text-orange-900 overflow-x-hidden">
       
-      {/* Dynamic Glass Navigation */}
-      <nav className="fixed w-full z-50 top-0 bg-white/70 backdrop-blur-xl border-b border-gray-100 py-5 transition-all">
+      {/* Mega Navigation */}
+      <motion.nav 
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        className="fixed w-full z-50 top-0 bg-white/70 backdrop-blur-2xl border-b border-slate-100 py-6"
+      >
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-          <div className="flex items-center gap-3 group cursor-pointer" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>
-            <div className="bg-orange-600 p-2.5 rounded-2xl text-white shadow-xl transition-transform group-hover:rotate-6">
-              <Home size={24} />
+          <motion.div 
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="flex items-center gap-3 group cursor-pointer" 
+            onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}
+          >
+            <div className="bg-orange-600 p-2.5 rounded-2xl text-white shadow-2xl transition-all group-hover:rotate-[15deg]">
+              <Home size={26} />
             </div>
             <div className="flex flex-col">
-              <span className="text-2xl font-black text-slate-900 tracking-tight leading-none">Room<span className="text-orange-600">Saathi</span></span>
-              <span className="text-[8px] font-black text-slate-400 uppercase tracking-[0.4em] mt-1">Kawardha City</span>
+              <span className="text-2xl font-black text-slate-900 tracking-tighter leading-none">Room<span className="text-orange-600">Saathi</span></span>
+              <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.5em] mt-1">Premium Rental Hub</span>
             </div>
-          </div>
+          </motion.div>
           
-          <div className="flex items-center gap-3">
-            <button 
-              onClick={onLoginAdmin}
-              className="hidden md:flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-800 transition-all border border-slate-700 shadow-xl"
-            >
-              <Settings size={14} className="text-orange-500" />
-              <span>{lang === 'HI' ? 'एडमिन पोर्टल' : 'Admin Hub'}</span>
-            </button>
-
-            <button 
-              onClick={() => setLang(lang === 'EN' ? 'HI' : 'EN')}
-              className="px-5 py-2.5 hover:bg-slate-50 rounded-2xl text-[10px] font-black text-slate-900 border-2 border-slate-100 flex items-center gap-2 transition-all"
+          <div className="flex items-center gap-4">
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setLanguage(language === 'EN' ? 'HI' : 'EN')}
+              className="px-4 py-2 hover:bg-slate-50 rounded-xl text-[10px] font-black text-slate-900 border-2 border-slate-100 flex items-center gap-2 transition-all uppercase tracking-widest"
             >
               <Languages size={14} className="text-orange-600" />
-              {lang === 'EN' ? 'हिन्दी' : 'EN'}
-            </button>
+              {language === 'EN' ? 'हिन्दी' : 'English'}
+            </motion.button>
+            <div className="h-8 w-px bg-slate-100"></div>
+            <motion.button 
+              whileHover={{ scale: 1.05, rotate: 90 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={onLoginAdmin}
+              className="bg-slate-900 text-white p-2.5 rounded-xl hover:bg-slate-800 transition-all shadow-xl"
+            >
+              <Settings size={20} />
+            </motion.button>
           </div>
         </div>
-      </nav>
+      </motion.nav>
 
-      {/* Modern Hero Section */}
-      <section className="relative pt-44 pb-32 overflow-hidden bg-gradient-to-br from-orange-50/50 via-white to-indigo-50/30">
+      {/* Futuristic Hero Section */}
+      <section className="relative pt-48 pb-32 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div className="flex flex-col lg:flex-row items-center gap-20">
-            <div className="flex-1 text-center lg:text-left animate-fade-in">
-              <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-orange-200 text-orange-700 px-5 py-2.5 rounded-full text-xs font-black mb-10 shadow-sm">
-                <Sparkles size={16} className="text-orange-500" /> Trusted by 5,000+ Students
-              </div>
-              <h1 className="text-6xl lg:text-8xl font-black text-slate-900 leading-[0.95] mb-10 tracking-tighter">
-                {lang === 'HI' ? <>कवर्धा का <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-600">स्मार्ट रूम</span> नेटवर्क</> : <>Kawardha's <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-600">Smart Room</span> Network</>}
-              </h1>
-              <p className="text-xl text-slate-500 font-medium mb-12 max-w-xl leading-relaxed">
-                Connect directly with property owners in Kawardha. Verified listings, zero brokerage, and instant secure access.
-              </p>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto lg:mx-0">
-                {/* Tenant Entry */}
-                <button 
+          <div className="text-center mb-20">
+             <motion.div 
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: 0.2 }}
+               className="inline-flex items-center gap-2 bg-orange-50 text-orange-600 px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest mb-10 shadow-sm border border-orange-100"
+             >
+                <Star size={14} className="fill-orange-600" /> {t.officialPartner}
+             </motion.div>
+             
+             <motion.h1 
+               initial={{ opacity: 0, y: 30 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: 0.3, duration: 0.8 }}
+               className="text-6xl lg:text-[10rem] font-black text-slate-900 leading-[0.85] tracking-tighter mb-12"
+             >
+               Rental <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-600">Evolution.</span>
+             </motion.h1>
+             
+             <motion.p 
+               initial={{ opacity: 0 }}
+               animate={{ opacity: 1 }}
+               transition={{ delay: 0.5, duration: 1 }}
+               className="text-2xl text-slate-400 font-medium mb-16 max-w-3xl mx-auto leading-relaxed"
+             >
+               {t.heroSub} <br/> <span className="text-slate-900 font-black underline decoration-orange-500 underline-offset-8">{language === 'HI' ? 'बिना दलाली। डायरेक्ट कॉल। 100% सुरक्षित।' : 'Zero Brokerage. Direct Calls. 100% Secure.'}</span>
+             </motion.p>
+
+             <motion.div 
+               initial={{ opacity: 0, scale: 0.9 }}
+               animate={{ opacity: 1, scale: 1 }}
+               transition={{ delay: 0.7 }}
+               className="flex flex-col sm:flex-row justify-center gap-6"
+             >
+                <motion.button 
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={onLoginCustomer}
-                  className="group relative bg-orange-600 text-white p-10 rounded-[2.5rem] text-left transition-all hover:scale-[1.03] active:scale-95 shadow-[0_20px_50px_rgba(234,88,12,0.3)] overflow-hidden"
+                  className="bg-orange-600 text-white px-12 py-7 rounded-[2.5rem] font-black text-2xl hover:bg-orange-700 transition-all shadow-[0_25px_60px_-15px_rgba(234,88,12,0.4)] flex items-center justify-center gap-4"
                 >
-                  <div className="relative z-10">
-                    <div className="bg-white/20 p-3 w-fit rounded-2xl mb-8 group-hover:scale-110 transition-transform">
-                      <Zap size={32} />
-                    </div>
-                    <h3 className="text-3xl font-black mb-1 tracking-tight">{lang === 'HI' ? 'किरायेदार' : 'I Need a Room'}</h3>
-                    <p className="text-orange-100 text-sm font-bold opacity-80 uppercase tracking-widest">Premium Lifetime Access</p>
-                  </div>
-                  <div className="absolute -right-8 -bottom-8 bg-white/5 w-48 h-48 rounded-full blur-2xl"></div>
-                </button>
-
-                {/* Owner Entry */}
-                <button 
+                  {t.findRoom}
+                  <ArrowRight size={28} />
+                </motion.button>
+                <motion.button 
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={onLoginOwner}
-                  className="group relative bg-slate-900 text-white p-10 rounded-[2.5rem] text-left transition-all hover:scale-[1.03] active:scale-95 shadow-[0_20px_50px_rgba(15,23,42,0.3)] overflow-hidden"
+                  className="bg-white text-slate-900 border-4 border-slate-900 px-12 py-7 rounded-[2.5rem] font-black text-2xl hover:bg-slate-900 hover:text-white transition-all shadow-2xl flex items-center justify-center gap-4"
                 >
-                  <div className="relative z-10">
-                    <div className="bg-white/10 p-3 w-fit rounded-2xl mb-8 group-hover:scale-110 transition-transform">
-                      <Building size={32} />
-                    </div>
-                    <h3 className="text-3xl font-black mb-1 tracking-tight">{lang === 'HI' ? 'मकान मालिक' : 'List My Property'}</h3>
-                    <p className="text-slate-400 text-sm font-bold uppercase tracking-widest">Verify & Post Listing</p>
-                  </div>
-                  <div className="absolute -right-8 -bottom-8 bg-white/5 w-48 h-48 rounded-full blur-2xl"></div>
-                </button>
-              </div>
-            </div>
-
-            {/* Visual Social Proof Area */}
-            <div className="flex-1 w-full grid grid-cols-2 gap-6 relative">
-               <div className="absolute inset-0 bg-orange-600/5 blur-[120px] rounded-full"></div>
-               <div className="bg-white/70 backdrop-blur-xl p-10 rounded-[3rem] shadow-2xl border border-white flex flex-col justify-center animate-fade-in delay-100">
-                  <div className="bg-blue-100 text-blue-600 p-4 w-fit rounded-2xl mb-6"><Users size={32} /></div>
-                  <h4 className="text-5xl font-black text-slate-900 tracking-tighter mb-2">5.2k+</h4>
-                  <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em]">Kawardha Seekers</p>
-               </div>
-               <div className="bg-white/70 backdrop-blur-xl p-10 rounded-[3rem] shadow-2xl border border-white translate-y-12 animate-fade-in delay-200">
-                  <div className="bg-orange-100 text-orange-600 p-4 w-fit rounded-2xl mb-6"><MapPin size={32} /></div>
-                  <h4 className="text-5xl font-black text-slate-900 tracking-tighter mb-2">12+</h4>
-                  <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em]">Verified Sectors</p>
-               </div>
-               <div className="bg-white/70 backdrop-blur-xl p-10 rounded-[3rem] shadow-2xl border border-white flex flex-col justify-center animate-fade-in delay-300">
-                  <div className="bg-green-100 text-green-600 p-4 w-fit rounded-2xl mb-6"><CheckCircle2 size={32} /></div>
-                  <h4 className="text-5xl font-black text-slate-900 tracking-tighter mb-2">0%</h4>
-                  <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em]">Brokerage Fee</p>
-               </div>
-               <div className="bg-slate-900 p-10 rounded-[3rem] shadow-2xl translate-y-12 animate-fade-in delay-500">
-                  <div className="bg-white/10 p-4 w-fit rounded-2xl mb-6 text-orange-500"><ShieldCheck size={32} /></div>
-                  <h4 className="text-2xl font-black text-white leading-tight mb-2">Verified System</h4>
-                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Kawardha Saathi Approved</p>
-               </div>
-            </div>
+                   {t.listProperty}
+                </motion.button>
+             </motion.div>
           </div>
+
+          {/* Trust Bento Grid */}
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-6xl mx-auto"
+          >
+             <motion.div whileHover={{ y: -10 }} className="bg-slate-50 p-10 rounded-[3rem] border border-slate-100 flex flex-col justify-between">
+                <Users size={40} className="text-blue-600" />
+                <div>
+                   <h4 className="text-4xl font-black text-slate-900">5.2k+</h4>
+                   <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">{language === 'HI' ? 'खुश किरायेदार' : 'Happy Tenants'}</p>
+                </div>
+             </motion.div>
+             <motion.div whileHover={{ y: -10 }} className="bg-orange-600 p-10 rounded-[3rem] text-white flex flex-col justify-between shadow-2xl shadow-orange-200">
+                <ShieldCheck size={40} />
+                <div>
+                   <h4 className="text-4xl font-black">100%</h4>
+                   <p className="text-[10px] font-black uppercase tracking-widest text-orange-200">{language === 'HI' ? 'वेरिफाइड ओनर' : 'Owner Verified'}</p>
+                </div>
+             </motion.div>
+             <motion.div whileHover={{ y: -10 }} className="bg-slate-900 p-10 rounded-[3rem] text-white md:col-span-2 flex flex-col justify-between">
+                <Zap size={40} className="text-orange-500" />
+                <div className="flex justify-between items-end">
+                   <div>
+                      <h4 className="text-4xl font-black">{language === 'HI' ? 'जीरो' : 'Zero'}</h4>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">{language === 'HI' ? 'कोई छुपा हुआ शुल्क नहीं' : 'Hidden Brokerage Fee'}</p>
+                   </div>
+                   <div className="bg-white/10 px-4 py-2 rounded-2xl text-xs font-bold border border-white/10">{language === 'HI' ? 'भरोसेमंद नेटवर्क' : 'Trusted Network'}</div>
+                </div>
+             </motion.div>
+          </motion.div>
         </div>
-        
-        {/* Background Gradients */}
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-orange-100/30 rounded-full blur-[120px] -mr-96 -mt-96"></div>
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-100/30 rounded-full blur-[100px] -ml-64 -mb-64"></div>
+
+        {/* Decorative Background Blur */}
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.2, 1],
+            rotate: [0, 90, 0]
+          }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          className="absolute top-0 right-0 w-[1000px] h-[1000px] bg-orange-100/30 rounded-full blur-[160px] -mr-96 -mt-96"
+        ></motion.div>
       </section>
 
-      {/* Information / How it works Section */}
+      {/* Rules & Guidelines Section (Professional Niyam) */}
       <section className="py-32 bg-slate-50 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-20 max-w-3xl mx-auto">
-            <h2 className="text-5xl font-black text-slate-900 mb-6 tracking-tight">How RoomSaathi Works</h2>
-            <p className="text-slate-500 font-medium text-lg">We've simplified the rental process in Kawardha to just three easy steps.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            {[
-              { 
-                step: "01", 
-                title: "Explore Listings", 
-                desc: "Browse verified single rooms, family flats, and girls PGs in Kawardha's best localities like Siksha Colony.", 
-                icon: <Map className="text-orange-600" size={32} /> 
-              },
-              { 
-                step: "02", 
-                title: "Unlock Details", 
-                desc: "Join our premium network to instantly see owner contact numbers and exact map locations without brokers.", 
-                icon: <Lock className="text-slate-900" size={32} /> 
-              },
-              { 
-                step: "03", 
-                title: "Direct Move-in", 
-                desc: "Call the owner directly, visit the room, and finalize your stay. No hidden charges or monthly commissions.", 
-                icon: <HeartHandshake className="text-green-600" size={32} /> 
-              }
-            ].map((item, idx) => (
-              <div key={idx} className="bg-white p-12 rounded-[2.5rem] shadow-xl border border-slate-100 hover:translate-y-[-10px] transition-all group">
-                <div className="flex justify-between items-start mb-8">
-                  <div className="bg-slate-50 p-5 rounded-2xl group-hover:scale-110 transition-transform">
-                    {item.icon}
-                  </div>
-                  <span className="text-5xl font-black text-slate-100 group-hover:text-orange-100 transition-colors">{item.step}</span>
+          <div className="flex flex-col lg:flex-row items-center gap-20">
+             <motion.div 
+               initial={{ opacity: 0, x: -50 }}
+               whileInView={{ opacity: 1, x: 0 }}
+               viewport={{ once: true }}
+               className="flex-1"
+             >
+                <div className="bg-white p-10 lg:p-16 rounded-[4rem] shadow-2xl border border-slate-100 relative overflow-hidden">
+                   <div className="absolute top-0 right-0 p-10 text-slate-50"><Map size={120} strokeWidth={1} /></div>
+                   <h2 className="text-4xl lg:text-5xl font-black text-slate-900 mb-8 relative z-10 leading-tight">
+                     {language === 'HI' ? 'प्लेटफॉर्म के नियम और ' : 'Platform Rules & '} <br/> <span className="text-orange-600">{language === 'HI' ? 'गारंटी' : 'Guarantees'}</span>
+                   </h2>
+                   <div className="space-y-8 relative z-10">
+                      {[
+                        { 
+                          title: language === 'HI' ? '7-दिन पास नियम' : '7-Day Pass Rule', 
+                          desc: language === 'HI' ? 'प्रीमियम पास केवल 7 दिनों तक मान्य है। इस दौरान आप अनलिमिटेड room देख सकते हैं।' : 'Premium pass is valid for 7 days. You can view unlimited rooms during this period.', 
+                          icon: <Clock /> 
+                        },
+                        { 
+                          title: language === 'HI' ? 'जीरो ब्रोकरेज पॉलिसी' : 'Zero Brokerage Policy', 
+                          desc: language === 'HI' ? 'अगर कोई ओनर ब्रोकरेज मांगता है, तो हमें तुरंत रिपोर्ट करें। हम उसे प्लेटफार्म से हटा देंगे।' : 'If an owner asks for brokerage, report us immediately. we will remove them from platform.', 
+                          icon: <ShieldAlert /> 
+                        },
+                        { 
+                          title: language === 'HI' ? 'सुरक्षा प्रोटोकॉल' : 'Security Protocol', 
+                          desc: language === 'HI' ? 'मालिक से मिलकर ही एडवांस दें। रेंट साथी केवल जानकारी साझा करता है, डील की सुरक्षा आपकी जिम्मेदारी है।' : 'Give advance only after meeting the owner. Saathi only shares info, deal safety is your responsibility.', 
+                          icon: <Lock /> 
+                        },
+                      ].map((n, i) => (
+                        <motion.div 
+                          key={i} 
+                          initial={{ opacity: 0, y: 20 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: i * 0.1 }}
+                          className="flex gap-6"
+                        >
+                           <div className="bg-orange-50 p-4 h-fit rounded-2xl text-orange-600">{n.icon}</div>
+                           <div>
+                              <h4 className="text-lg font-black text-slate-900 mb-1 tracking-tight">{n.title}</h4>
+                              <p className="text-sm text-slate-500 font-medium leading-relaxed">{n.desc}</p>
+                           </div>
+                        </motion.div>
+                      ))}
+                   </div>
                 </div>
-                <h3 className="text-2xl font-black text-slate-900 mb-4">{item.title}</h3>
-                <p className="text-slate-500 font-medium leading-relaxed">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Trust / Support Bar */}
-      <section className="py-20 bg-white border-y border-slate-100">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-12">
-          <div className="flex items-center gap-6">
-            <div className="bg-green-100 p-5 rounded-3xl text-green-600 shadow-lg"><PhoneCall size={32} /></div>
-            <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-1">Direct Assistance</p>
-              <h4 className="text-2xl font-black text-slate-900">Need help? Call Vinay</h4>
-              <p className="text-orange-600 font-bold text-lg">+91 9340303098</p>
-            </div>
-          </div>
-          <div className="h-px w-full md:w-px md:h-20 bg-slate-100"></div>
-          <div className="flex flex-wrap justify-center gap-12 opacity-50 grayscale">
-            <div className="flex items-center gap-2 font-black text-xl text-slate-900"><ShieldCheck /> Secured</div>
-            <div className="flex items-center gap-2 font-black text-xl text-slate-900"><MapPin /> Kawardha</div>
-            <div className="flex items-center gap-2 font-black text-xl text-slate-900"><Users /> Community</div>
+             </motion.div>
+             
+             <motion.div 
+               initial={{ opacity: 0, x: 50 }}
+               whileInView={{ opacity: 1, x: 0 }}
+               viewport={{ once: true }}
+               className="flex-1 space-y-10"
+             >
+                <motion.div 
+                  whileHover={{ rotate: 0 }}
+                  className="bg-slate-900 p-12 rounded-[4rem] text-white shadow-2xl transform lg:rotate-2 transition-transform"
+                >
+                   <PhoneCall size={48} className="text-orange-500 mb-8" />
+                   <h3 className="text-3xl font-black mb-4">{language === 'HI' ? 'आधिकारिक सहायता' : 'Official Support'}</h3>
+                   <p className="text-slate-400 font-medium text-lg leading-relaxed mb-8">
+                     {language === 'HI' 
+                        ? 'रूम ढूँढने में दिक्कत आ रही है? हमारी टीम आपको पर्सनली गाइड करेगी। कवर्धा के हर मोहल्ले की सही जानकारी के लिए कॉल करें।' 
+                        : 'Having trouble finding a room? Our team will guide you personally. Call for accurate info on every locality in Kawardha.'}
+                   </p>
+                   <div className="flex items-center gap-6">
+                      <div className="text-3xl font-black text-white">+91 9340303098</div>
+                      <div className="bg-white/10 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border border-white/10">Vinay C.</div>
+                   </div>
+                </motion.div>
+             </motion.div>
           </div>
         </div>
       </section>

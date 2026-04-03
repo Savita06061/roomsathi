@@ -1,6 +1,6 @@
-
 import React from 'react';
-import { Home, LogOut, Languages, User as UserIcon } from 'lucide-react';
+import { motion } from 'motion/react';
+import { Home, LogOut, Languages, User as UserIcon, Settings, ShieldCheck } from 'lucide-react';
 import { Language, User } from '../types';
 import { translations } from '../translations';
 
@@ -15,52 +15,66 @@ const Header: React.FC<HeaderProps> = ({ onLogout, user, language, setLanguage }
   const t = translations[language];
 
   return (
-    <header className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 h-18 py-3 flex items-center justify-between">
+    <header className="bg-white/80 backdrop-blur-2xl border-b border-slate-100 sticky top-0 z-50 py-4">
+      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
         
         {/* Logo Area */}
-        <div className="flex items-center space-x-3 cursor-pointer" onClick={() => window.location.reload()}>
-          <div className="bg-orange-600 p-2 rounded-xl text-white shadow-lg shadow-orange-100">
+        <motion.div 
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="flex items-center space-x-3 cursor-pointer group" 
+          onClick={() => window.location.reload()}
+        >
+          <div className="bg-orange-600 p-2 rounded-xl text-white shadow-xl group-hover:rotate-12 transition-transform">
             <Home size={22} />
           </div>
           <div className="hidden sm:block">
-            <h1 className="text-xl font-black text-slate-900 tracking-tight leading-none">
+            <h1 className="text-xl font-black text-slate-900 tracking-tighter leading-none">
               Room<span className="text-orange-600">Saathi</span>
             </h1>
-            <p className="text-[10px] text-slate-400 font-black tracking-widest uppercase mt-0.5">{t.appTagline}</p>
+            <p className="text-[9px] text-slate-400 font-black tracking-[0.3em] uppercase mt-1">Kawardha Hub</p>
           </div>
-        </div>
+        </motion.div>
         
         {/* Actions */}
-        <div className="flex items-center gap-2 sm:gap-4">
-          {/* User Info */}
+        <div className="flex items-center gap-4">
           {user && (
-            <div className="flex items-center gap-3 px-3 py-1.5 bg-gray-50 rounded-full border border-gray-100">
-              <img src={user.avatar} alt={user.name} className="w-7 h-7 rounded-full shadow-sm" />
-              <div className="hidden md:block">
-                <p className="text-[10px] font-bold text-gray-400 leading-none mb-0.5 uppercase tracking-tighter">Logged In</p>
-                <p className="text-xs font-black text-gray-800 leading-none">{user.name.split(' ')[0]}</p>
+            <motion.div 
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="flex items-center gap-3 px-4 py-2 bg-slate-50 rounded-2xl border border-slate-100 group"
+            >
+              <div className="relative">
+                <img src={user.avatar} alt={user.name} className="w-8 h-8 rounded-full shadow-md border-2 border-white" />
+                <div className="absolute -bottom-1 -right-1 bg-green-500 w-3 h-3 rounded-full border-2 border-white shadow-sm"></div>
               </div>
-            </div>
+              <div className="hidden md:block">
+                <p className="text-[9px] font-black text-slate-400 leading-none mb-1 uppercase tracking-widest">{user.role}</p>
+                <p className="text-sm font-black text-slate-900 leading-none tracking-tight">{user.name.split(' ')[0]}</p>
+              </div>
+            </motion.div>
           )}
 
-          {/* Language Toggle */}
-          <button 
+          <div className="h-8 w-px bg-slate-100 mx-1"></div>
+
+          <motion.button 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => setLanguage(language === 'EN' ? 'HI' : 'EN')}
-            className="flex items-center gap-2 px-3 py-2 bg-orange-50 hover:bg-orange-100 rounded-xl text-xs font-bold text-orange-700 transition-colors border border-orange-100"
+            className="flex items-center gap-2 px-4 py-2 hover:bg-orange-50 rounded-xl text-[10px] font-black text-slate-900 border-2 border-slate-100 transition-all uppercase tracking-widest"
           >
             <Languages size={16} className="text-orange-600" />
             <span className="hidden md:inline">{language === 'EN' ? 'हिन्दी' : 'English'}</span>
-          </button>
+          </motion.button>
 
-          <div className="h-6 w-px bg-slate-100 mx-1"></div>
-
-          <button 
+          <motion.button 
+            whileHover={{ scale: 1.05, backgroundColor: '#ef4444' }}
+            whileTap={{ scale: 0.95 }}
             onClick={onLogout}
-            className="flex items-center gap-2 px-3 py-2 text-sm text-slate-500 hover:text-red-600 font-bold transition-colors"
+            className="p-3 bg-slate-900 text-white rounded-xl transition-all shadow-xl"
           >
             <LogOut size={18} />
-          </button>
+          </motion.button>
         </div>
       </div>
     </header>
