@@ -26,73 +26,68 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, setFilters }) => {
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white p-8 rounded-[2.5rem] shadow-xl shadow-slate-200/50 border border-slate-100 mb-10"
+      className="bg-white p-10 rounded-[3.5rem] shadow-2xl shadow-slate-200/40 border border-slate-100 mb-12"
     >
-      <div className="flex items-center gap-3 mb-8">
-        <div className="bg-orange-100 p-2 rounded-xl text-orange-600">
-          <SlidersHorizontal size={22} />
-        </div>
-        <span className="text-xl font-black text-slate-900 tracking-tight">Smart Filters</span>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Room Type */}
-        <div className="relative group">
-          <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Room Category</label>
-          <div className="relative">
-            <select 
-              value={filters.roomType} 
-              onChange={handleTypeChange}
-              className="w-full bg-slate-50 border-2 border-slate-50 text-slate-900 text-sm font-bold rounded-2xl focus:border-orange-600 focus:bg-white block p-4 appearance-none outline-none transition-all"
-            >
-              <option value="ALL">All Categories</option>
-              <option value={RoomType.SINGLE}>Single Room</option>
-              <option value={RoomType.BACHELOR}>Bachelor Room</option>
-              <option value={RoomType.GIRLS}>Girls Room</option>
-              <option value={RoomType.FAMILY}>Family Room</option>
-            </select>
-            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={18} />
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-10">
+        
+        {/* Left Side: Chips Selection */}
+        <div className="flex-1">
+          <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6 ml-2">Room Category Network</label>
+          <div className="flex flex-wrap gap-3">
+             {['ALL', ...Object.values(RoomType)].map((type) => (
+               <motion.button
+                 key={type}
+                 whileHover={{ scale: 1.05 }}
+                 whileTap={{ scale: 0.95 }}
+                 onClick={() => setFilters(prev => ({ ...prev, roomType: type as any }))}
+                 className={`px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all ${
+                   filters.roomType === type 
+                   ? 'bg-orange-600 text-white shadow-xl shadow-orange-100 border-transparent' 
+                   : 'bg-white text-slate-500 border-2 border-slate-50 hover:border-orange-100 hover:text-slate-900'
+                 }`}
+               >
+                 {type === 'ALL' ? 'All Units' : type.replace('_', ' ')}
+               </motion.button>
+             ))}
           </div>
         </div>
 
-        {/* Locality */}
-        <div className="relative group">
-          <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Preferred Locality</label>
-          <div className="relative">
-            <select 
-              value={filters.locality}
-              onChange={handleLocalityChange}
-              className="w-full bg-slate-50 border-2 border-slate-50 text-slate-900 text-sm font-bold rounded-2xl focus:border-orange-600 focus:bg-white block p-4 appearance-none outline-none transition-all"
-            >
-              <option value="ALL">All Kawardha</option>
-              {LOCALITIES.map(loc => (
-                <option key={loc} value={loc}>{loc}</option>
-              ))}
-            </select>
-            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={18} />
-          </div>
+        {/* Right Side: Locality & Budget */}
+        <div className="flex flex-col md:flex-row gap-8 items-end">
+           <div className="w-full md:w-64 space-y-2">
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] ml-2">Locality Vector</label>
+              <div className="relative">
+                <select 
+                  value={filters.locality}
+                  onChange={handleLocalityChange}
+                  className="w-full bg-slate-50 border-2 border-slate-50 text-slate-900 text-[11px] font-black uppercase tracking-widest rounded-2xl focus:border-orange-600 focus:bg-white block p-4 appearance-none outline-none transition-all"
+                >
+                  <option value="ALL">All Kawardha</option>
+                  {LOCALITIES.map(loc => (
+                    <option key={loc} value={loc}>{loc}</option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+              </div>
+           </div>
+
+           <div className="w-full md:w-64 space-y-4">
+              <div className="flex justify-between items-end px-2">
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Budget Limit</label>
+                <span className="text-xl font-black text-orange-600 tracking-tighter leading-none">₹{filters.maxPrice}</span>
+              </div>
+              <input 
+                type="range" 
+                min="1500" 
+                max="10000" 
+                step="500"
+                value={filters.maxPrice}
+                onChange={handlePriceChange}
+                className="w-full h-2 bg-slate-100 rounded-full appearance-none cursor-pointer accent-orange-600"
+              />
+           </div>
         </div>
 
-        {/* Price Slider */}
-        <div className="flex flex-col justify-center">
-          <div className="flex justify-between items-end mb-3 px-1">
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest">Max Budget</label>
-            <span className="text-2xl font-black text-orange-600 tracking-tighter leading-none">₹{filters.maxPrice}</span>
-          </div>
-          <input 
-            type="range" 
-            min="1500" 
-            max="10000" 
-            step="500"
-            value={filters.maxPrice}
-            onChange={handlePriceChange}
-            className="w-full h-2.5 bg-slate-100 rounded-full appearance-none cursor-pointer accent-orange-600"
-          />
-          <div className="flex justify-between text-[9px] font-black text-slate-300 mt-2 px-1 uppercase tracking-widest">
-            <span>₹1.5k</span>
-            <span>₹10k+</span>
-          </div>
-        </div>
       </div>
     </motion.div>
   );

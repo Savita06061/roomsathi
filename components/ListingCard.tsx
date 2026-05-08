@@ -62,11 +62,11 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing, isAdmin, onEdit, onD
           ₹{listing.rentPrice}<span className="text-[10px] text-gray-400 font-bold ml-1 uppercase tracking-widest">/mo</span>
         </div>
         
-        <div className="absolute bottom-6 left-6 flex flex-col gap-2">
+        <div className="absolute bottom-6 left-6 flex flex-wrap gap-2">
           <motion.span 
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            className={`w-fit px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-xl text-white ${getBadgeColor(listing.type)} shadow-lg`}
+            className={`w-fit px-4 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-xl text-white ${getBadgeColor(listing.type)} shadow-lg border border-white/20`}
           >
             {listing.type}
           </motion.span>
@@ -75,9 +75,9 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing, isAdmin, onEdit, onD
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.1 }}
-              className="w-fit px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-xl bg-green-500 text-white flex items-center shadow-lg"
+              className="w-fit px-4 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-xl bg-slate-900/40 backdrop-blur-md text-white flex items-center shadow-lg border border-white/10"
             >
-              <ShieldCheck size={12} className="mr-1.5" /> {t.verified}
+              <ShieldCheck size={12} className="mr-1.5 text-orange-500" /> {language === 'HI' ? 'टीम द्वारा सत्यापित' : 'Verified by Team'}
             </motion.span>
           )}
         </div>
@@ -90,16 +90,28 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing, isAdmin, onEdit, onD
              <MapPin size={16} className="flex-shrink-0" />
              <h3 className="text-2xl font-black text-slate-900 tracking-tight leading-none">{listing.locality}</h3>
           </div>
-          <p className="text-sm text-slate-500 font-medium mb-6 line-clamp-2 leading-relaxed">{listing.address}</p>
+          <p className="text-sm text-slate-500 font-medium mb-6 line-clamp-1 leading-relaxed">{listing.address}</p>
+
+          {/* New Metadata Row */}
+          <div className="grid grid-cols-2 gap-4 mb-8 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+             <div>
+                <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Availablity</p>
+                <p className="text-xs font-black text-slate-900 capitalize">Immediate</p>
+             </div>
+             <div className="border-l border-slate-200 pl-4">
+                <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Security</p>
+                <p className="text-xs font-black text-slate-900 italic">Negotiable</p>
+             </div>
+          </div>
 
           <div className="flex flex-wrap gap-2 mb-8">
             {listing.amenities.map((amenity, index) => (
               <motion.span 
                 key={index} 
                 whileHover={{ scale: 1.05 }}
-                className="inline-flex items-center bg-orange-50/50 text-orange-700 text-[11px] font-bold px-4 py-1.5 rounded-full border border-orange-100/50"
+                className="inline-flex items-center bg-white text-slate-600 text-[10px] font-black px-4 py-2 rounded-xl border border-slate-100 shadow-sm transition-all hover:border-orange-200 hover:text-orange-600 uppercase tracking-tight"
               >
-                <span className="mr-2">{getAmenityIcon(amenity)}</span>
+                <span className="mr-2 opacity-50">{getAmenityIcon(amenity)}</span>
                 {amenity}
               </motion.span>
             ))}

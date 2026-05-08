@@ -32,18 +32,19 @@ const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
 
         {/* Links */}
         <div>
-          <h3 className="text-white font-bold mb-4 uppercase text-xs tracking-widest">Solutions</h3>
-          <ul className="space-y-3 text-sm">
-            <li><a href="#" className="hover:text-orange-500 transition-colors">Find a PG</a></li>
-            <li><a href="#" className="hover:text-orange-500 transition-colors">Family Flats</a></li>
-            <li><a href="#" className="hover:text-orange-500 transition-colors">Post a Room</a></li>
+          <h3 className="text-white font-bold mb-6 uppercase text-[10px] tracking-widest text-slate-500">Service Map</h3>
+          <ul className="space-y-4 text-sm font-medium">
+            <li><a href="#" className="hover:text-orange-500 transition-colors flex items-center gap-2 group"><div className="w-1.5 h-1.5 rounded-full bg-orange-600"></div> Executive PGs</a></li>
+            <li><a href="#" className="hover:text-orange-500 transition-colors flex items-center gap-2 group"><div className="w-1.5 h-1.5 rounded-full bg-slate-600 group-hover:bg-orange-600"></div> Luxury Flats</a></li>
+            <li><a href="#" className="hover:text-orange-500 transition-colors flex items-center gap-2 group"><div className="w-1.5 h-1.5 rounded-full bg-slate-600 group-hover:bg-orange-600"></div> Student Units</a></li>
+            <li><a href="#" className="hover:text-orange-500 transition-colors flex items-center gap-2 group"><div className="w-1.5 h-1.5 rounded-full bg-slate-600 group-hover:bg-orange-600"></div> Commercial</a></li>
             {onAdminClick && (
               <li>
                 <button 
                   onClick={onAdminClick}
-                  className="flex items-center gap-1.5 text-orange-500 hover:text-orange-400 font-bold transition-colors mt-2"
+                  className="flex items-center gap-2 text-slate-400 hover:text-orange-500 font-bold transition-all mt-4 border border-slate-800 px-4 py-2 rounded-xl"
                 >
-                  <Lock size={14} /> Admin Portal
+                  <Lock size={14} /> Protocol Access
                 </button>
               </li>
             )}
@@ -52,11 +53,12 @@ const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
 
         {/* Info */}
         <div>
-          <h3 className="text-white font-bold mb-4 uppercase text-xs tracking-widest">Company</h3>
-          <ul className="space-y-3 text-sm">
-            <li><a href="#" className="hover:text-orange-500 transition-colors">About Us</a></li>
-            <li><a href="#" className="hover:text-orange-500 transition-colors">Privacy Policy</a></li>
-            <li><a href="#" className="hover:text-orange-500 transition-colors">Terms of Service</a></li>
+          <h3 className="text-white font-bold mb-6 uppercase text-[10px] tracking-widest text-slate-500">Legal & Ethics</h3>
+          <ul className="space-y-4 text-sm font-medium">
+            <li><a href="#" className="hover:text-orange-500 transition-colors">Privacy Protocol</a></li>
+            <li><a href="#" className="hover:text-orange-500 transition-colors">User Agreement</a></li>
+            <li><a href="#" className="hover:text-orange-500 transition-colors">Zero-Brokerage Policy</a></li>
+            <li><a href="#" className="hover:text-orange-500 transition-colors">Security Guidelines</a></li>
           </ul>
         </div>
 

@@ -69,70 +69,93 @@ const LandingPage: React.FC<LandingPageProps> = ({
       </motion.nav>
 
       {/* Futuristic Hero Section */}
-      <section className="relative pt-48 pb-32 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div className="text-center mb-20">
-             <motion.div 
-               initial={{ opacity: 0, y: 20 }}
-               animate={{ opacity: 1, y: 0 }}
-               transition={{ delay: 0.2 }}
-               className="inline-flex items-center gap-2 bg-orange-50 text-orange-600 px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest mb-10 shadow-sm border border-orange-100"
-             >
-                <Star size={14} className="fill-orange-600" /> {t.officialPartner}
-             </motion.div>
-             
-             <motion.h1 
-               initial={{ opacity: 0, y: 30 }}
-               animate={{ opacity: 1, y: 0 }}
-               transition={{ delay: 0.3, duration: 0.8 }}
-               className="text-6xl lg:text-[10rem] font-black text-slate-900 leading-[0.85] tracking-tighter mb-12"
-             >
-               Rental <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-600">Evolution.</span>
-             </motion.h1>
-             
-             <motion.p 
-               initial={{ opacity: 0 }}
-               animate={{ opacity: 1 }}
-               transition={{ delay: 0.5, duration: 1 }}
-               className="text-2xl text-slate-400 font-medium mb-16 max-w-3xl mx-auto leading-relaxed"
-             >
-               {t.heroSub} <br/> <span className="text-slate-900 font-black underline decoration-orange-500 underline-offset-8">{language === 'HI' ? 'बिना दलाली। डायरेक्ट कॉल। 100% सुरक्षित।' : 'Zero Brokerage. Direct Calls. 100% Secure.'}</span>
-             </motion.p>
+      <section className="relative pt-48 pb-20 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
+           <motion.div 
+             initial={{ opacity: 0, y: 20 }}
+             animate={{ opacity: 1, y: 0 }}
+             className="inline-flex items-center gap-2 bg-orange-50 text-orange-600 px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.25em] mb-12 shadow-sm border border-orange-100"
+           >
+              <Star size={14} className="fill-orange-600" /> {t.officialPartner}
+           </motion.div>
+           
+           <motion.h1 
+             initial={{ opacity: 0, y: 30 }}
+             animate={{ opacity: 1, y: 0 }}
+             transition={{ delay: 0.1, duration: 0.8 }}
+             className="text-7xl lg:text-[11rem] font-black text-slate-900 leading-[0.8] tracking-tighter mb-16"
+           >
+             Rental <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-red-600 to-slate-900">Evolution.</span>
+           </motion.h1>
+           
+           <motion.p 
+             initial={{ opacity: 0 }}
+             animate={{ opacity: 1 }}
+             transition={{ delay: 0.3, duration: 1 }}
+             className="text-2xl text-slate-400 font-medium mb-16 max-w-4xl mx-auto leading-relaxed"
+           >
+             {t.heroSub} <br/> <span className="text-slate-900 font-black decoration-orange-500/30 underline underline-offset-8 decoration-4">{language === 'HI' ? 'अत्याधुनिक सुविधाएं। जीरो ब्रोकरेज। सटीक जानकारी।' : 'Modern Tech. Zero Brokerage. Accurate Specs.'}</span>
+           </motion.p>
 
-             <motion.div 
-               initial={{ opacity: 0, scale: 0.9 }}
-               animate={{ opacity: 1, scale: 1 }}
-               transition={{ delay: 0.7 }}
-               className="flex flex-col sm:flex-row justify-center gap-6"
-             >
-                <motion.button 
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={onLoginCustomer}
-                  className="bg-orange-600 text-white px-12 py-7 rounded-[2.5rem] font-black text-2xl hover:bg-orange-700 transition-all shadow-[0_25px_60px_-15px_rgba(234,88,12,0.4)] flex items-center justify-center gap-4"
-                >
-                  {t.findRoom}
-                  <ArrowRight size={28} />
-                </motion.button>
-                <motion.button 
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={onLoginOwner}
-                  className="bg-white text-slate-900 border-4 border-slate-900 px-12 py-7 rounded-[2.5rem] font-black text-2xl hover:bg-slate-900 hover:text-white transition-all shadow-2xl flex items-center justify-center gap-4"
-                >
-                   {t.listProperty}
-                </motion.button>
-             </motion.div>
-          </div>
+           <motion.div 
+             initial={{ opacity: 0, scale: 0.9 }}
+             animate={{ opacity: 1, scale: 1 }}
+             transition={{ delay: 0.5 }}
+             className="flex flex-col sm:flex-row justify-center gap-8 mb-32"
+           >
+              <motion.button 
+                whileHover={{ scale: 1.05, y: -5 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={onLoginCustomer}
+                className="bg-orange-600 text-white px-14 py-8 rounded-[3rem] font-black text-2xl hover:bg-orange-700 transition-all shadow-[0_30px_60px_-15px_rgba(234,88,12,0.4)] flex items-center justify-center gap-4"
+              >
+                {t.findRoom}
+                <ArrowRight size={32} />
+              </motion.button>
+              <motion.button 
+                whileHover={{ scale: 1.05, y: -5 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={onLoginOwner}
+                className="bg-white text-slate-900 border-[6px] border-slate-900 px-14 py-8 rounded-[3rem] font-black text-2xl hover:bg-slate-900 hover:text-white transition-all shadow-2xl flex items-center justify-center gap-4"
+              >
+                 {t.listProperty}
+              </motion.button>
+           </motion.div>
 
-          {/* Trust Bento Grid */}
-          <motion.div 
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-6xl mx-auto"
-          >
+           {/* Service Matrix - Added Sector */}
+           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-32">
+              {[
+                { label: language === 'HI' ? 'लक्जरी पीजी' : 'Luxury PG', count: '120+', icon: <Users size={24} /> },
+                { label: language === 'HI' ? 'विद्यार्थी रूम' : 'Student Rooms', count: '250+', icon: <Home size={24} /> },
+                { label: language === 'HI' ? 'फॅमिली फ्लैट्स' : 'Family Flats', count: '80+', icon: <ShieldCheck size={24} /> },
+                { label: language === 'HI' ? 'बिजनेस रेंट' : 'Business Space', count: '45+', icon: <Settings size={24} /> },
+              ].map((service, i) => (
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  key={i} 
+                  className="bg-slate-50/50 p-8 rounded-[3rem] border border-slate-100 hover:bg-white hover:shadow-xl transition-all group"
+                >
+                   <div className="bg-white p-4 w-fit rounded-2xl shadow-sm mb-4 text-orange-600 group-hover:bg-orange-600 group-hover:text-white transition-all transform group-hover:rotate-12">
+                      {service.icon}
+                   </div>
+                   <h4 className="text-xl font-black text-slate-900 tracking-tight">{service.label}</h4>
+                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">{service.count} {language === 'HI' ? 'उपलब्ध' : 'Active Units'}</p>
+                </motion.div>
+              ))}
+           </div>
+
+           {/* Trust Stats Section */}
+           <motion.div 
+             initial={{ opacity: 0, y: 40 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             viewport={{ once: true }}
+             transition={{ duration: 0.8 }}
+             className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-6xl mx-auto"
+           >
+              {/* Previous Stats content... */}
              <motion.div whileHover={{ y: -10 }} className="bg-slate-50 p-10 rounded-[3rem] border border-slate-100 flex flex-col justify-between">
                 <Users size={40} className="text-blue-600" />
                 <div>
