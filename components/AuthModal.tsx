@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import { X, Mail, Lock, User, Key, ShieldCheck, UserCheck, Home, Settings, Loader2, CheckCircle2, ShieldAlert, Fingerprint, Wallet, ArrowRight, Zap } from 'lucide-react';
 import { Language, User as UserType, UserRole, WalletType } from '../types';
 import { translations } from '../translations';
-import { BrowserProvider } from 'ethers';
 
 interface AuthModalProps {
   onClose: () => void;
@@ -44,54 +43,28 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLoginSuccess, language
     }
   };
 
-  const connectMetaMask = async () => {
-    if (!(window as any).ethereum) {
-      alert(language === 'HI' ? 'कृपया मेटामास्क इंस्टॉल करें!' : 'Please install MetaMask!');
-      return;
-    }
-    setIsWalletLoading('METAMASK');
-    try {
-      const provider = new BrowserProvider((window as any).ethereum);
-      const accounts = await provider.send("eth_requestAccounts", []);
-      const address = accounts[0];
-      
-      onLoginSuccess({
-        id: 'eth_' + address.slice(0, 8),
-        name: `Web3 ${mode}`,
-        email: `${address.slice(0, 6)}...${address.slice(-4)}@eth.web3`,
-        role: mode,
-        avatar: `https://api.dicebear.com/7.x/identicon/svg?seed=${address}`,
-        walletAddress: address,
-        walletType: 'METAMASK'
-      });
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsWalletLoading('NONE');
-    }
-  };
-
   const connectPetra = async () => {
-    const isPetraInstalled = (window as any).aptos;
+    // Detect Aptos/Petra using window properties
+    const aptos = (window as any).aptos || (window as any).petra;
     
-    if (!isPetraInstalled) {
+    if (!aptos) {
       alert(language === 'HI' 
-        ? 'पेट्रा वॉलेट नहीं मिला! कृपया इसे इंस्टॉल करें और फिर इस पेज को "न्यू टैब" में खोलें।' 
-        : 'Petra Wallet not detected! Please install it and open this app in a "New Tab" for extension support.');
+        ? 'पेट्रा वॉलेट नहीं मिला! कृपया एक्सटेंशन इंस्टॉल करें और इस ऐप को "न्यू टैब" में खोलें।' 
+        : 'Petra Wallet not detected! Please ensure the extension is installed and open the app in a "New Tab" for extension support.');
       window.open('https://petra.app/', '_blank');
       return;
     }
 
     setIsWalletLoading('PETRA');
     try {
-      // Direct connection attempt
-      const result = await (window as any).aptos.connect();
+      // Connect to Aptos
+      const result = await aptos.connect();
       const address = result.address;
       
-      if (!address) throw new Error("No address returned");
+      if (!address) throw new Error("No address returned from wallet");
 
       onLoginSuccess({
-        id: 'aptos_' + address.slice(0, 8),
+        id: 'aptos_' + (typeof address === 'string' ? address.slice(0, 8) : 'user'),
         name: `Aptos ${mode}`,
         email: `${address.slice(0, 6)}...${address.slice(-4)}@aptos.web3`,
         role: mode,
@@ -102,8 +75,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLoginSuccess, language
     } catch (error: any) {
       console.error("Petra Connection Error:", error);
       alert(language === 'HI'
-        ? `कनेक्शन विफल: ${error.message || 'वॉलेट ने रिजेक्ट कर दिया'}. कृपया न्यू टैब में कोशिश करें।`
-        : `Connection Failed: ${error.message || 'Wallet rejected the request'}. Please try in a New Tab.`);
+        ? `कनेक्शन विफल: ${error.message || 'वॉलेट ने रिजेक्ट कर दिया'}. कृपया सुनिश्चित करें कि आप न्यू टैब में हैं।`
+        : `Connection Failed: ${error.message || 'Wallet rejected the request'}. Ensure you are in a New Tab.`);
     } finally {
       setIsWalletLoading('NONE');
     }
@@ -278,26 +251,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLoginSuccess, language
                     >
                       <div className="flex items-center gap-4">
                         {isWalletLoading === 'PETRA' ? <Loader2 className="animate-spin" size={24} /> : <img src="https://petra.app/favicon.ico" className="w-8 h-8 rounded-full" alt="Petra" />}
-                        <div className="text-left">
-                           <p className="leading-none">Petra Wallet</p>
-                           <p className="text-[10px] text-white/40 uppercase tracking-widest mt-1">Aptos Testnet</p>
-                        </div>
-                      </div>
-                      <ArrowRight size={20} />
-                    </motion.button>
-
-                    <motion.button
-                      type="button"
-                      whileHover={{ scale: 1.02, y: -2 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={connectMetaMask}
-                      className="flex items-center justify-between gap-4 bg-white border-2 border-slate-200 p-6 rounded-3xl font-black text-lg text-slate-900 shadow-sm hover:border-orange-500 transition-all"
-                    >
-                      <div className="flex items-center gap-4">
-                        {isWalletLoading === 'METAMASK' ? <Loader2 className="animate-spin" size={24} /> : <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Mirror_Logo.svg" className="w-8 h-8" alt="MetaMask" />}
-                        <div className="text-left">
-                           <p className="leading-none">MetaMask</p>
-                           <p className="text-[10px] text-slate-400 uppercase tracking-widest mt-1">Ethereum / EVM</p>
+                        <div className="text-left leading-none">
+                           <span className="text-[10px] text-orange-400 font-bold uppercase tracking-widest">Connect with</span>
+                           <p className="text-xl">Petra Wallet</p>
                         </div>
                       </div>
                       <ArrowRight size={20} />
@@ -307,7 +263,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLoginSuccess, language
                   <div className="flex items-center gap-2 justify-center py-2">
                     <ShieldAlert size={14} className="text-orange-500" />
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                      Tip: Open in <span className="text-slate-900 underline cursor-pointer" onClick={() => window.open(window.location.href, '_blank')}>New Tab</span> for better Wallet support
+                      Tip: Open in <span className="text-slate-900 underline cursor-pointer" onClick={() => window.open(window.location.href, '_blank')}>New Tab</span> for Petra support
                     </p>
                   </div>
                 </div>
@@ -322,13 +278,13 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLoginSuccess, language
                       <Zap size={24} fill="currentColor" />
                     </div>
                     <div>
-                      <h5 className="text-sm font-black text-slate-900 uppercase tracking-tight">Testnet Faucet Hub</h5>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Free Demo APT / SUSD / ETH Tokens</p>
+                      <h5 className="text-sm font-black text-slate-900 uppercase tracking-tight">Aptos Testnet Faucet</h5>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Free Demo APT / ShelbyUSD Tokens</p>
                     </div>
                   </div>
                   <p className="text-[11px] font-medium text-slate-600 leading-relaxed relative z-10">
                     You need test tokens to simulate room bookings and property listings. 
-                    If you don't see the faucet in the header (APT or SUSD) after connecting, use these official links:
+                    If you don't see the auto-faucet in the header, use the official link below:
                   </p>
                   <div className="flex flex-col gap-3 relative z-10">
                     <motion.button
@@ -339,15 +295,6 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLoginSuccess, language
                     >
                       <img src="https://petra.app/favicon.ico" className="w-4 h-4" alt="Aptos" />
                       Official Aptos Faucet
-                    </motion.button>
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => window.open('https://sepolia-faucet.pk910.de/', '_blank')}
-                      className="w-full bg-white border border-slate-200 text-slate-900 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:border-blue-600 hover:text-blue-600 transition-all shadow-sm flex items-center justify-center gap-2"
-                    >
-                      <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Mirror_Logo.svg" className="w-4 h-4" alt="MetaMask" />
-                      Sepolia (EVM) Faucet
                     </motion.button>
                   </div>
                 </div>

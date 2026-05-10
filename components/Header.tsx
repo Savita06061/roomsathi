@@ -75,7 +75,7 @@ const Header: React.FC<HeaderProps> = ({ onLogout, user, language, setLanguage }
                     <motion.button
                       whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(234, 88, 12, 0.4)' }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={user.walletType === 'PETRA' ? handleFaucet : () => window.open('https://sepolia-faucet.pk910.de/', '_blank')}
+                      onClick={handleFaucet}
                       disabled={isFaucetLoading}
                       className="ml-2 flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-2xl hover:from-orange-700 hover:to-red-700 transition-all shadow-2xl relative overflow-hidden group"
                     >
@@ -84,7 +84,7 @@ const Header: React.FC<HeaderProps> = ({ onLogout, user, language, setLanguage }
                         <>
                            <Zap size={16} fill="white" className="animate-pulse" />
                            <div className="flex flex-col items-start leading-none">
-                             <span className="text-[10px] font-black uppercase tracking-widest text-orange-100">Claim {user.walletType === 'PETRA' ? 'APT/SUSD' : 'ETH'}</span>
+                             <span className="text-[10px] font-black uppercase tracking-widest text-orange-100">Claim APT/SUSD</span>
                              <span className="text-[12px] font-black uppercase tracking-tighter">Testnet Faucet</span>
                            </div>
                         </>
