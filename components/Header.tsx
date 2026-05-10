@@ -51,7 +51,7 @@ const Header: React.FC<HeaderProps> = ({ onLogout, user, language, setLanguage }
             <h1 className="text-xl font-black text-slate-900 tracking-tighter leading-none">
               Room<span className="text-orange-600">Saathi</span>
             </h1>
-            <p className="text-[9px] text-slate-400 font-black tracking-[0.3em] uppercase mt-1">Kawardha Hub</p>
+            <p className="text-[9px] text-slate-400 font-black tracking-[0.3em] uppercase mt-1">WWW Global Hub</p>
           </div>
         </motion.div>
         
@@ -74,14 +74,22 @@ const Header: React.FC<HeaderProps> = ({ onLogout, user, language, setLanguage }
                    </div>
                    {user.walletType === 'PETRA' && (
                      <motion.button
-                       whileHover={{ scale: 1.1 }}
-                       whileTap={{ scale: 0.9 }}
+                       whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(234, 88, 12, 0.4)' }}
+                       whileTap={{ scale: 0.95 }}
                        onClick={handleFaucet}
                        disabled={isFaucetLoading}
-                       className="ml-2 p-2 bg-orange-100 text-orange-600 rounded-lg hover:bg-orange-200 transition-colors"
-                       title="Get Test Tokens"
+                       className="ml-2 flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-2xl hover:from-orange-700 hover:to-red-700 transition-all shadow-2xl relative overflow-hidden group"
                      >
-                       {isFaucetLoading ? <Loader2 className="animate-spin" size={14} /> : <Zap size={14} fill="currentColor" />}
+                       <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                       {isFaucetLoading ? <Loader2 className="animate-spin" size={16} /> : (
+                         <>
+                            <Zap size={16} fill="white" className="animate-pulse" />
+                            <div className="flex flex-col items-start leading-none">
+                              <span className="text-[10px] font-black uppercase tracking-widest text-orange-100">Claim APT</span>
+                              <span className="text-[12px] font-black uppercase tracking-tighter">Testnet Faucet</span>
+                            </div>
+                         </>
+                       )}
                      </motion.button>
                    )}
                 </div>

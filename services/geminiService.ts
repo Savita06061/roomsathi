@@ -3,8 +3,8 @@ import { GoogleGenAI, Chat, GenerateContentResponse } from "@google/genai";
 import { MOCK_LISTINGS, LOCALITIES } from '../constants';
 
 const SYSTEM_INSTRUCTION = `
-You are "Saathi AI", a helpful, friendly local assistant for Kawardha Room Saathi.
-Your goal is to help students, workers, and families find rental rooms in Kawardha city.
+You are "Saathi AI", a helpful, friendly local assistant for World Wide Web (WWW).
+Your goal is to help students, workers, and families find rental rooms globally.
 
 You have access to the following current listings data (context):
 ${JSON.stringify(MOCK_LISTINGS.map(l => `${l.type} at ${l.locality} for ₹${l.rentPrice}. Amenities: ${l.amenities.join(', ')}`))}

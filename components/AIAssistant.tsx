@@ -7,7 +7,7 @@ import { ChatMessage } from '../types';
 const AIAssistant: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: 'model', text: 'Namaste! I am Saathi AI. Ask me about rents or areas in Kawardha.' }
+    { role: 'model', text: 'Namaste! I am Saathi AI. Ask me about rents or areas globally.' }
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -80,7 +80,7 @@ const AIAssistant: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="font-black text-sm tracking-tight">Saathi AI</h3>
-                  <p className="text-[10px] text-orange-100 font-bold uppercase tracking-widest opacity-80">Kawardha Guide</p>
+                  <p className="text-[10px] text-orange-100 font-bold uppercase tracking-widest opacity-80">Global Guide</p>
                 </div>
               </div>
               <button 
@@ -130,7 +130,7 @@ const AIAssistant: React.FC = () => {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyPress}
-                placeholder="Ask about areas in Kawardha..."
+                placeholder="Ask about areas globally..."
                 className="flex-1 bg-slate-50 border-2 border-slate-50 rounded-2xl px-5 py-3 text-sm font-medium focus:border-orange-600 focus:bg-white outline-none transition-all"
               />
               <motion.button 

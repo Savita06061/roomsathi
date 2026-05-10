@@ -269,8 +269,8 @@ const LandingPage: React.FC<LandingPageProps> = ({
                    <h3 className="text-3xl font-black mb-4">{language === 'HI' ? 'आधिकारिक सहायता' : 'Official Support'}</h3>
                    <p className="text-slate-400 font-medium text-lg leading-relaxed mb-8">
                      {language === 'HI' 
-                        ? 'रूम ढूँढने में दिक्कत आ रही है? हमारी टीम आपको पर्सनली गाइड करेगी। कवर्धा के हर मोहल्ले की सही जानकारी के लिए कॉल करें।' 
-                        : 'Having trouble finding a room? Our team will guide you personally. Call for accurate info on every locality in Kawardha.'}
+                        ? 'रूम ढूँढने में दिक्कत आ रही है? हमारी टीम आपको पर्सनली गाइड करेगी। विश्व भर के हर मोहल्ले की सही जानकारी के लिए कॉल करें।' 
+                        : 'Having trouble finding a room? Our team will guide you personally. Call for accurate info on every locality globally.'}
                    </p>
                    <div className="flex items-center gap-6">
                       <div className="text-3xl font-black text-white">+91 9340303098</div>

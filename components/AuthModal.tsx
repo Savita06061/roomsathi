@@ -101,7 +101,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLoginSuccess, language
   const mockDb = [
     { email: 'admin@saathi.com', password: '123', role: 'ADMIN', name: 'Super Admin' },
     { email: 'owner@saathi.com', password: '123', role: 'OWNER', name: 'Rajesh Owner' },
-    { email: 'user@saathi.com', password: '123', role: 'CUSTOMER', name: 'Kawardha User' }
+    { email: 'user@saathi.com', password: '123', role: 'CUSTOMER', name: 'WWW Global User' }
   ];
 
   const handleSignupSubmit = (e: React.FormEvent) => {

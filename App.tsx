@@ -215,7 +215,7 @@ function App() {
               className="max-w-6xl mx-auto px-4 pt-8 pb-12 flex-grow w-full"
             >
               <div className="mb-8">
-                <h2 className="text-3xl font-bold text-gray-800 mb-2">{language === 'HI' ? 'कवर्धा में कमरे खोजें' : 'Find Rooms in Kawardha'}</h2>
+                <h2 className="text-3xl font-bold text-gray-800 mb-2">{language === 'HI' ? 'विश्व भर में कमरे खोजें' : 'Find Rooms Globally'}</h2>
                 <p className="text-gray-500">{language === 'HI' ? 'वेरिफाइड पीजी, फ्लैट और कमरे देखें।' : 'Browse verified rooms.'}</p>
               </div>
               <FilterBar filters={filters} setFilters={setFilters} />

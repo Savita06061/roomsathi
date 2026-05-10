@@ -63,7 +63,7 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
             </motion.div>
             <div>
                <h1 className="text-2xl font-black tracking-tighter leading-none">Owner <span className="text-orange-500">Dashboard</span></h1>
-               <p className="text-[9px] text-slate-500 font-black uppercase tracking-[0.4em] mt-1">Kawardha Room Saathi</p>
+               <p className="text-[9px] text-slate-500 font-black uppercase tracking-[0.4em] mt-1">Room Saathi WWW</p>
             </div>
           </div>
           <div className="flex items-center gap-6">

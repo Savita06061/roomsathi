@@ -37,12 +37,12 @@ const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onSubscribe, langua
             className="text-center lg:text-left"
           >
             <h1 className="text-5xl lg:text-7xl font-black text-slate-900 leading-[1.05] tracking-tighter mb-8">
-              {isOwner ? (language === 'HI' ? 'किरायेदार पाएं' : 'Get Tenants') : (language === 'HI' ? 'अनलॉक करें' : 'Unlock')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-600">5000+ Rooms</span> <br/> {language === 'HI' ? 'कवर्धा में' : 'in Kawardha'}
+              {isOwner ? (language === 'HI' ? 'किरायेदार पाएं' : 'Get Tenants') : (language === 'HI' ? 'अनलॉक करें' : 'Unlock')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-600">5000+ Rooms</span> <br/> {language === 'HI' ? 'विश्व भर में' : 'globally'}
             </h1>
             <p className="text-xl text-slate-500 font-medium leading-relaxed max-w-xl">
               {language === 'HI' 
-                ? 'कवर्धा का सबसे बड़ा रूम नेटवर्क। बिना दलाली के, सीधे मकान मालिक से जुड़ें और अपना समय और पैसा बचाएं।' 
-                : 'Kawardha\'s largest room network. Connect directly with landlords without brokerage and save your time and money.'}
+                ? 'विश्व का सबसे बड़ा रूम नेटवर्क। बिना दलाली के, सीधे मकान मालिक से जुड़ें और अपना समय और पैसा बचाएं।' 
+                : 'The world\'s largest room network. Connect directly with landlords without brokerage and save your time and money.'}
             </p>
           </motion.div>
 
@@ -102,7 +102,7 @@ const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onSubscribe, langua
                 <p className="text-slate-500 font-medium leading-relaxed">
                   {language === 'HI' 
                     ? 'आपका डेटा सुरक्षित है। धोखाधड़ी रोकने के लिए हम हर ओनर को मैन्युअली वेरिफाई करते हैं।' 
-                    : 'Your data is encrypted. We verify every owner manually to prevent fraud in Kawardha.'}
+                    : 'Your data is encrypted. We verify every owner manually to prevent fraud globally.'}
                 </p>
              </div>
           </motion.div>

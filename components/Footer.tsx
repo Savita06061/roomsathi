@@ -20,7 +20,7 @@ const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
             <h2 className="text-xl font-bold text-white tracking-tight">RoomSaathi</h2>
           </div>
           <p className="text-sm leading-relaxed text-slate-500 mb-6">
-            Connecting Kawardha's landlords and tenants on a single, secure, and smart platform. 
+            Connecting landlords and tenants globally on a single, secure, and smart platform. 
             No brokers, direct contact.
           </p>
           <div className="flex gap-4">
@@ -75,7 +75,7 @@ const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
             </div>
             <div className="flex items-center gap-3">
                <div className="text-orange-500"><MapPin size={16} /></div>
-               <p className="text-xs">Main Market, Kawardha (C.G.)</p>
+               <p className="text-xs">World Wide Web, Decentralized Hub</p>
             </div>
           </div>
         </div>
@@ -83,9 +83,9 @@ const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 mt-12 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center text-[10px] font-bold uppercase tracking-widest text-slate-600 gap-4">
-        <p>&copy; {new Date().getFullYear()} Room Saathi Kawardha. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} Room Saathi WWW. All rights reserved.</p>
         <div className="flex items-center gap-1">
-           Made with <Heart size={10} className="text-red-500 fill-red-500" /> in Kawardha
+           Made with <Heart size={10} className="text-red-500 fill-red-500" /> globally
         </div>
       </div>
     </footer>

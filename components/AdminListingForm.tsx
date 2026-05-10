@@ -67,7 +67,7 @@ const AdminListingForm: React.FC<AdminListingFormProps> = ({ listing, onClose, o
             <h2 className="text-3xl font-black text-slate-900 tracking-tighter">
               {isEditing ? 'Edit Listing' : 'Add New Room'}
             </h2>
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mt-1">Kawardha Database Entry</p>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mt-1">WWW Global Database</p>
           </div>
           <motion.button 
             whileHover={{ rotate: 90, backgroundColor: '#f1f5f9' }}

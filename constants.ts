@@ -2,10 +2,10 @@
 import { Listing, RoomType } from './types';
 
 export const LOCALITIES = [
-  'Ram Nagar',
-  'Siksha Colony',
-  'Raj Mahal Chowk',
-  'Kailash Nagar'
+  'SILICON VALLEY',
+  'LONDON HUB',
+  'DUBAI CORE',
+  'TOKYO REACH'
 ];
 
 export const APP_PRIMARY_COLOR = 'orange-600';

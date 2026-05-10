@@ -62,7 +62,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, setFilters }) => {
                   onChange={handleLocalityChange}
                   className="w-full bg-slate-50 border-2 border-slate-50 text-slate-900 text-[11px] font-black uppercase tracking-widest rounded-2xl focus:border-orange-600 focus:bg-white block p-4 appearance-none outline-none transition-all"
                 >
-                  <option value="ALL">All Kawardha</option>
+                  <option value="ALL">World Wide Web</option>
                   {LOCALITIES.map(loc => (
                     <option key={loc} value={loc}>{loc}</option>
                   ))}
