@@ -41,7 +41,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
             </div>
             <div className="flex flex-col">
               <span className="text-2xl font-black text-slate-900 tracking-tighter leading-none">Room<span className="text-orange-600">Saathi</span></span>
-              <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.5em] mt-1">Premium Rental Hub</span>
+              <span className="text-[9px] font-black text-orange-600 uppercase tracking-[0.5em] mt-1">World Wide Web Hub</span>
             </div>
           </motion.div>
           

@@ -256,42 +256,44 @@ function App() {
         </AnimatePresence>
         <Footer />
         {isSubscribed && <AIAssistant />}
-        
-        {/* Modals */}
-        <AnimatePresence>
-          {authMode && (
-            <AuthModal 
-              mode={authMode} 
-              onClose={() => setAuthMode(null)} 
-              onLoginSuccess={handleLoginSuccess}
-              language={language}
-            />
-          )}
-          {bookingListing && (
-            <BookingModal 
-              listing={bookingListing} 
-              onClose={() => setBookingListing(null)} 
-              onConfirm={handleCreateBooking}
-              language={language}
-            />
-          )}
-          {(showAddForm || editingListing) && (
-            <AdminListingForm 
-              listing={editingListing || undefined}
-              onClose={() => { setShowAddForm(false); setEditingListing(null); }}
-              onSave={editingListing ? handleUpdateListing : handleAddListing}
-              language={language}
-            />
-          )}
-        </AnimatePresence>
       </motion.div>
     );
   };
 
   return (
-    <AnimatePresence mode="wait">
-      {renderView()}
-    </AnimatePresence>
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      <AnimatePresence mode="wait">
+        {renderView()}
+      </AnimatePresence>
+
+      {/* Modals - Moved to top level to be accessible from any view */}
+      <AnimatePresence>
+        {authMode && (
+          <AuthModal 
+            mode={authMode} 
+            onClose={() => setAuthMode(null)} 
+            onLoginSuccess={handleLoginSuccess}
+            language={language}
+          />
+        )}
+        {bookingListing && (
+          <BookingModal 
+            listing={bookingListing} 
+            onClose={() => setBookingListing(null)} 
+            onConfirm={handleCreateBooking}
+            language={language}
+          />
+        )}
+        {(showAddForm || editingListing) && (
+          <AdminListingForm 
+            listing={editingListing || undefined}
+            onClose={() => { setShowAddForm(false); setEditingListing(null); }}
+            onSave={editingListing ? handleUpdateListing : handleAddListing}
+            language={language}
+          />
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
 

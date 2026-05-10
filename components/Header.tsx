@@ -72,26 +72,24 @@ const Header: React.FC<HeaderProps> = ({ onLogout, user, language, setLanguage }
                       <p className="text-[9px] font-black text-slate-400 leading-none mb-1 uppercase tracking-widest">{user.walletType} (Testnet)</p>
                       <p className="text-xs font-mono font-black text-slate-900 leading-none">{user.walletAddress.slice(0, 6)}...{user.walletAddress.slice(-4)}</p>
                    </div>
-                   {user.walletType === 'PETRA' && (
-                     <motion.button
-                       whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(234, 88, 12, 0.4)' }}
-                       whileTap={{ scale: 0.95 }}
-                       onClick={handleFaucet}
-                       disabled={isFaucetLoading}
-                       className="ml-2 flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-2xl hover:from-orange-700 hover:to-red-700 transition-all shadow-2xl relative overflow-hidden group"
-                     >
-                       <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                       {isFaucetLoading ? <Loader2 className="animate-spin" size={16} /> : (
-                         <>
-                            <Zap size={16} fill="white" className="animate-pulse" />
-                            <div className="flex flex-col items-start leading-none">
-                              <span className="text-[10px] font-black uppercase tracking-widest text-orange-100">Claim APT</span>
-                              <span className="text-[12px] font-black uppercase tracking-tighter">Testnet Faucet</span>
-                            </div>
-                         </>
-                       )}
-                     </motion.button>
-                   )}
+                    <motion.button
+                      whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(234, 88, 12, 0.4)' }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={user.walletType === 'PETRA' ? handleFaucet : () => window.open('https://sepolia-faucet.pk910.de/', '_blank')}
+                      disabled={isFaucetLoading}
+                      className="ml-2 flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-2xl hover:from-orange-700 hover:to-red-700 transition-all shadow-2xl relative overflow-hidden group"
+                    >
+                      <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                      {isFaucetLoading ? <Loader2 className="animate-spin" size={16} /> : (
+                        <>
+                           <Zap size={16} fill="white" className="animate-pulse" />
+                           <div className="flex flex-col items-start leading-none">
+                             <span className="text-[10px] font-black uppercase tracking-widest text-orange-100">Claim {user.walletType === 'PETRA' ? 'APT' : 'ETH'}</span>
+                             <span className="text-[12px] font-black uppercase tracking-tighter">Testnet Faucet</span>
+                           </div>
+                        </>
+                      )}
+                    </motion.button>
                 </div>
               ) : (
                 <>

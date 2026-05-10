@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Mail, Lock, User, Key, ShieldCheck, UserCheck, Home, Settings, Loader2, CheckCircle2, ShieldAlert, Fingerprint, Wallet } from 'lucide-react';
+import { X, Mail, Lock, User, Key, ShieldCheck, UserCheck, Home, Settings, Loader2, CheckCircle2, ShieldAlert, Fingerprint, Wallet, ArrowRight, Zap } from 'lucide-react';
 import { Language, User as UserType, UserRole, WalletType } from '../types';
 import { translations } from '../translations';
 import { BrowserProvider } from 'ethers';
@@ -263,7 +263,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLoginSuccess, language
                       whileHover={{ scale: 1.02, y: -2 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={connectPetra}
-                      className="flex items-center justify-between gap-4 bg-slate-900 text-white p-6 rounded-3xl font-black text-lg shadow-2xl transition-all"
+                      className="flex items-center justify-between gap-4 bg-slate-900 border-2 border-slate-900 text-white p-6 rounded-3xl font-black text-lg shadow-2xl transition-all hover:bg-slate-800"
                     >
                       <div className="flex items-center gap-4">
                         {isWalletLoading === 'PETRA' ? <Loader2 className="animate-spin" size={24} /> : <img src="https://petra.app/favicon.ico" className="w-8 h-8 rounded-full" alt="Petra" />}
@@ -280,7 +280,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLoginSuccess, language
                       whileHover={{ scale: 1.02, y: -2 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={connectMetaMask}
-                      className="flex items-center justify-between gap-4 bg-white border-2 border-slate-100 p-6 rounded-3xl font-black text-lg text-slate-900 shadow-sm hover:border-orange-500 transition-all"
+                      className="flex items-center justify-between gap-4 bg-white border-2 border-slate-200 p-6 rounded-3xl font-black text-lg text-slate-900 shadow-sm hover:border-orange-500 transition-all"
                     >
                       <div className="flex items-center gap-4">
                         {isWalletLoading === 'METAMASK' ? <Loader2 className="animate-spin" size={24} /> : <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Mirror_Logo.svg" className="w-8 h-8" alt="MetaMask" />}
@@ -292,33 +292,53 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLoginSuccess, language
                       <ArrowRight size={20} />
                     </motion.button>
                   </div>
+                  
+                  <div className="flex items-center gap-2 justify-center py-2">
+                    <ShieldAlert size={14} className="text-orange-500" />
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                      Tip: Open in <span className="text-slate-900 underline cursor-pointer" onClick={() => window.open(window.location.href, '_blank')}>New Tab</span> for better Wallet support
+                    </p>
+                  </div>
                 </div>
 
                 {/* Faucet Box */}
-                <div className="bg-orange-50/50 rounded-3xl p-8 border border-orange-100/50 space-y-6">
-                  <div className="flex items-center gap-4">
-                    <div className="bg-orange-100 p-3 rounded-2xl text-orange-600">
+                <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-3xl p-8 border border-orange-100 space-y-6 relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <Zap size={80} fill="currentColor" className="text-orange-600" />
+                  </div>
+                  <div className="flex items-center gap-4 relative z-10">
+                    <div className="bg-orange-600 p-3 rounded-2xl text-white shadow-lg shadow-orange-200">
                       <Zap size={24} fill="currentColor" />
                     </div>
                     <div>
-                      <h5 className="text-sm font-black text-slate-900 uppercase tracking-tight">Demo Credits Faucet</h5>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Get test tokens for preview</p>
+                      <h5 className="text-sm font-black text-slate-900 uppercase tracking-tight">Testnet Faucet Hub</h5>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Free Demo APT / ETH Tokens</p>
                     </div>
                   </div>
-                  <p className="text-[11px] font-medium text-slate-600 leading-relaxed">
-                    Connecting to <span className="font-bold text-slate-900 capitalize">Testnet</span> environment. You need APT tokens to simulate bookings. Use the button below after connecting your wallet.
+                  <p className="text-[11px] font-medium text-slate-600 leading-relaxed relative z-10">
+                    You need test tokens to simulate room bookings and property listings. 
+                    If you don't see the faucet in the header after connecting, use these official links:
                   </p>
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => {
-                        // In a real flow, they check if wallet is connected first
-                        alert("Connect your Petra wallet first, then use the Faucet button next to your address in the top right.");
-                    }}
-                    className="w-full bg-white border border-orange-200 text-orange-600 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-orange-600 hover:text-white transition-all shadow-sm"
-                  >
-                    How to claim Faucet?
-                  </motion.button>
+                  <div className="flex flex-col gap-3 relative z-10">
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => window.open('https://aptos.dev/network/faucet', '_blank')}
+                      className="w-full bg-white border border-slate-200 text-slate-900 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:border-orange-600 hover:text-orange-600 transition-all shadow-sm flex items-center justify-center gap-2"
+                    >
+                      <img src="https://petra.app/favicon.ico" className="w-4 h-4" alt="Aptos" />
+                      Official Aptos Faucet
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => window.open('https://sepolia-faucet.pk910.de/', '_blank')}
+                      className="w-full bg-white border border-slate-200 text-slate-900 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:border-blue-600 hover:text-blue-600 transition-all shadow-sm flex items-center justify-center gap-2"
+                    >
+                      <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Mirror_Logo.svg" className="w-4 h-4" alt="MetaMask" />
+                      Sepolia (EVM) Faucet
+                    </motion.button>
+                  </div>
                 </div>
               </motion.div>
             ) : (
