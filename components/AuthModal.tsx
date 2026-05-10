@@ -275,7 +275,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLoginSuccess, language
                       className="flex items-center justify-center gap-2 bg-white border-2 border-slate-50 py-4 rounded-2xl font-black text-xs text-slate-900 shadow-sm hover:border-orange-500 transition-all"
                     >
                       {isWalletLoading === 'PETRA' ? <Loader2 className="animate-spin" size={16} /> : <img src="https://petra.app/favicon.ico" className="w-5 h-5 rounded-full" alt="Petra" />}
-                      Petra
+                      Petra (Testnet)
                     </motion.button>
                   </div>
                 </div>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, CheckCircle, Phone, User, Calendar, MapPin, ShieldCheck, Loader2 } from 'lucide-react';
+import { X, CheckCircle, Phone, User, Calendar, MapPin, ShieldCheck, Loader2, Zap } from 'lucide-react';
 import { Listing } from '../types';
 
 interface BookingModalProps {
@@ -13,8 +13,35 @@ const BookingModal: React.FC<BookingModalProps> = ({ listing, onClose, onConfirm
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [paymentStatus, setPaymentStatus] = useState<'IDLE' | 'PENDING' | 'SUCCESS'>('IDLE');
+  const [isFaucetLoading, setIsFaucetLoading] = useState(false);
 
   const aptPrice = (listing.rentPrice / 750).toFixed(2);
+
+  const handleFaucet = async () => {
+    if (!(window as any).aptos) {
+      alert('Petra Wallet not found!');
+      return;
+    }
+    setIsFaucetLoading(true);
+    try {
+      const account = await (window as any).aptos.account();
+      const address = account.address;
+      // Using Aptos Testnet Faucet API
+      const response = await fetch(`https://faucet.testnet.aptoslabs.com/mint?amount=100000000&address=${address}`, {
+        method: 'POST'
+      });
+      if (response.ok) {
+        alert('1 APT (Testnet) added to your wallet!');
+      } else {
+        throw new Error('Faucet failed');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Faucet request failed. Please use: https://aptos.dev/network/faucet');
+    } finally {
+      setIsFaucetLoading(false);
+    }
+  };
 
   const handleAptPayment = async () => {
     if (!(window as any).aptos) {
@@ -24,10 +51,9 @@ const BookingModal: React.FC<BookingModalProps> = ({ listing, onClose, onConfirm
     
     setPaymentStatus('PENDING');
     try {
-      // Simulation of Aptos Transaction
-      // In a real app, we would use AptosClient to submit a payload
+      // Real Aptos Transaction on Testnet
       const transaction = {
-        arguments: ["0x123...abc", (parseFloat(aptPrice) * 100000000).toString()], // octa units
+        arguments: ["0x264903328e9cf64188fa642a86847849e7b233a0ec3bdde0a3e8e19e075f10b7", (parseFloat(aptPrice) * 100000000).toString()], // recipient and amount in octas
         function: "0x1::coin::transfer",
         type: "entry_function_payload",
         type_arguments: ["0x1::aptos_coin::AptosCoin"],
@@ -174,7 +200,22 @@ const BookingModal: React.FC<BookingModalProps> = ({ listing, onClose, onConfirm
                      {paymentStatus === 'PENDING' ? <Loader2 className="animate-spin" /> : (
                        <>
                          <img src="https://cryptologos.cc/logos/aptos-apt-logo.svg?v=025" className="w-6 h-6 invert" alt="APT" />
-                         Pay {aptPrice} APT
+                         Pay {aptPrice} APT (Testnet)
+                       </>
+                     )}
+                   </motion.button>
+
+                   <motion.button 
+                     whileHover={{ scale: 1.02 }}
+                     whileTap={{ scale: 0.98 }}
+                     onClick={handleFaucet}
+                     disabled={isFaucetLoading}
+                     className="w-full bg-orange-50 text-orange-600 border-2 border-orange-100 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-white transition-all"
+                   >
+                     {isFaucetLoading ? <Loader2 className="animate-spin" size={14} /> : (
+                       <>
+                         <Zap size={14} fill="currentColor" />
+                         Claim 1 APT Demo Faucet
                        </>
                      )}
                    </motion.button>
@@ -197,7 +238,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ listing, onClose, onConfirm
           <div className="bg-slate-50 p-5 rounded-2xl flex gap-4 items-start border border-slate-100">
              <ShieldCheck className="text-green-600 flex-shrink-0 mt-0.5" size={18} />
              <p className="text-[10px] font-bold text-slate-400 leading-relaxed uppercase tracking-widest">
-                Aptos Mainnet Protocol Active. Transactions are irreversible and secure.
+                Aptos Testnet Protocol Active. Transactions are irreversible and secure for demo usage.
              </p>
           </div>
         </div>

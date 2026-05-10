@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { Home, LogOut, Languages, User as UserIcon, Settings, ShieldCheck, Wallet } from 'lucide-react';
+import { Home, LogOut, Languages, User as UserIcon, Settings, ShieldCheck, Wallet, Zap, Loader2 } from 'lucide-react';
 import { Language, User } from '../types';
 import { translations } from '../translations';
 
@@ -13,6 +13,25 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onLogout, user, language, setLanguage }) => {
   const t = translations[language];
+  const [isFaucetLoading, setIsFaucetLoading] = useState(false);
+
+  const handleFaucet = async () => {
+    if (!user?.walletAddress) return;
+    setIsFaucetLoading(true);
+    try {
+      const response = await fetch(`https://faucet.testnet.aptoslabs.com/mint?amount=100000000&address=${user.walletAddress}`, {
+        method: 'POST'
+      });
+      if (response.ok) {
+        alert('1 APT (Testnet) added! Check your Petra wallet.');
+      }
+    } catch (e) {
+      console.error(e);
+      alert('Faucet failed. Visit: https://aptos.dev/network/faucet');
+    } finally {
+      setIsFaucetLoading(false);
+    }
+  };
 
   return (
     <header className="bg-white/80 backdrop-blur-2xl border-b border-slate-100 sticky top-0 z-50 py-4">
@@ -50,9 +69,21 @@ const Header: React.FC<HeaderProps> = ({ onLogout, user, language, setLanguage }
                       <Wallet size={16} />
                    </div>
                    <div className="hidden md:block">
-                      <p className="text-[9px] font-black text-slate-400 leading-none mb-1 uppercase tracking-widest">{user.walletType}</p>
+                      <p className="text-[9px] font-black text-slate-400 leading-none mb-1 uppercase tracking-widest">{user.walletType} (Testnet)</p>
                       <p className="text-xs font-mono font-black text-slate-900 leading-none">{user.walletAddress.slice(0, 6)}...{user.walletAddress.slice(-4)}</p>
                    </div>
+                   {user.walletType === 'PETRA' && (
+                     <motion.button
+                       whileHover={{ scale: 1.1 }}
+                       whileTap={{ scale: 0.9 }}
+                       onClick={handleFaucet}
+                       disabled={isFaucetLoading}
+                       className="ml-2 p-2 bg-orange-100 text-orange-600 rounded-lg hover:bg-orange-200 transition-colors"
+                       title="Get Test Tokens"
+                     >
+                       {isFaucetLoading ? <Loader2 className="animate-spin" size={14} /> : <Zap size={14} fill="currentColor" />}
+                     </motion.button>
+                   )}
                 </div>
               ) : (
                 <>
