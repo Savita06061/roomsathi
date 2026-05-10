@@ -86,6 +86,69 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLoginSuccess, language
     }
   };
 
+  const connectMartian = async () => {
+    const martian = (window as any).martian;
+    if (!martian) {
+      const confirmed = confirm(language === 'HI' 
+        ? 'मार्टियन वॉलेट नहीं मिला! कृपया इसे इंस्टॉल करें और फिर इस पेज को "न्यू टैब" में खोलें।' 
+        : 'Martian Wallet not detected! Please install it and open this app in a "New Tab" for extension support.');
+      if (confirmed) window.open('https://martianwallet.xyz/', '_blank');
+      return;
+    }
+
+    setIsWalletLoading('MARTIAN');
+    try {
+      const response = await martian.connect();
+      const address = response.address;
+      onLoginSuccess({
+        id: 'martian_' + (typeof address === 'string' ? address.slice(0, 8) : 'user'),
+        name: `Martian Member`,
+        email: `${typeof address === 'string' ? address.slice(0, 6) : 'user'}...@martian.web3`,
+        role: mode,
+        avatar: `https://api.dicebear.com/7.x/identicon/svg?seed=${address}`,
+        walletAddress: typeof address === 'string' ? address : '',
+        walletType: 'MARTIAN'
+      });
+    } catch (error: any) {
+      console.error("Martian Connection Error:", error);
+      alert(`Error: ${error.message || 'Connection failed'}`);
+    } finally {
+      setIsWalletLoading('NONE');
+    }
+  };
+
+  const connectSui = async () => {
+    const suiWallet = (window as any).suiWallet;
+    if (!suiWallet) {
+      const confirmed = confirm(language === 'HI' 
+        ? 'Sui वॉलेट नहीं मिला! कृपया इसे इंस्टॉल करें।' 
+        : 'Sui Wallet not detected! Please install it for Sui support.');
+      if (confirmed) window.open('https://suiwallet.com/', '_blank');
+      return;
+    }
+
+    setIsWalletLoading('SUI');
+    try {
+      const response = await suiWallet.connect();
+      const accounts = await suiWallet.getAccounts();
+      const address = accounts[0];
+      onLoginSuccess({
+        id: 'sui_' + (typeof address === 'string' ? address.slice(0, 8) : 'user'),
+        name: `Sui Member`,
+        email: `${typeof address === 'string' ? address.slice(0, 6) : 'user'}...@sui.web3`,
+        role: mode,
+        avatar: `https://api.dicebear.com/7.x/identicon/svg?seed=${address}`,
+        walletAddress: typeof address === 'string' ? address : '',
+        walletType: 'SUI'
+      });
+    } catch (error: any) {
+      console.error("Sui Connection Error:", error);
+      alert(`Error: ${error.message || 'Connection failed'}`);
+    } finally {
+      setIsWalletLoading('NONE');
+    }
+  };
+
   const mockDb = [
     { email: 'admin@saathi.com', password: '123', role: 'ADMIN', name: 'Super Admin' },
     { email: 'owner@saathi.com', password: '123', role: 'OWNER', name: 'Rajesh Owner' },
@@ -262,12 +325,46 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLoginSuccess, language
                       </div>
                       <ArrowRight size={20} />
                     </motion.button>
+
+                    <motion.button
+                      type="button"
+                      whileHover={{ scale: 1.02, y: -2 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={connectMartian}
+                      className="flex items-center justify-between gap-4 bg-white border-2 border-slate-200 text-slate-900 p-6 rounded-3xl font-black text-lg shadow-sm hover:border-orange-600 transition-all"
+                    >
+                      <div className="flex items-center gap-4">
+                        {isWalletLoading === 'MARTIAN' ? <Loader2 className="animate-spin" size={24} /> : <img src="https://martianwallet.xyz/favicon.ico" className="w-8 h-8 rounded-full" alt="Martian" />}
+                        <div className="text-left leading-none">
+                           <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Connect with</span>
+                           <p className="text-xl">Martian Wallet</p>
+                        </div>
+                      </div>
+                      <ArrowRight size={20} />
+                    </motion.button>
+
+                    <motion.button
+                      type="button"
+                      whileHover={{ scale: 1.02, y: -2 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={connectSui}
+                      className="flex items-center justify-between gap-4 bg-blue-600 border-2 border-blue-600 text-white p-6 rounded-3xl font-black text-lg shadow-xl transition-all hover:bg-blue-700"
+                    >
+                      <div className="flex items-center gap-4">
+                        {isWalletLoading === 'SUI' ? <Loader2 className="animate-spin" size={24} /> : <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-blue-600 font-black text-xs">SUI</div>}
+                        <div className="text-left leading-none">
+                           <span className="text-[10px] text-blue-200 font-bold uppercase tracking-widest">Connect with</span>
+                           <p className="text-xl">Sui Wallet</p>
+                        </div>
+                      </div>
+                      <ArrowRight size={20} />
+                    </motion.button>
                   </div>
                   
                   <div className="flex items-center gap-2 justify-center py-2">
                     <ShieldAlert size={14} className="text-orange-500" />
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                      Tip: Open in <span className="text-slate-900 underline cursor-pointer" onClick={() => window.open(window.location.href, '_blank')}>New Tab</span> for Petra support
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">
+                      Tip: Open in <span className="text-slate-900 underline cursor-pointer" onClick={() => window.open(window.location.href, '_blank')}>New Tab</span> for Wallet support
                     </p>
                   </div>
                 </div>

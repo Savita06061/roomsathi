@@ -12,7 +12,7 @@ export type ListingStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
 
 export type UserRole = 'ADMIN' | 'CUSTOMER' | 'OWNER';
 
-export type WalletType = 'METAMASK' | 'PETRA' | 'NONE';
+export type WalletType = 'METAMASK' | 'PETRA' | 'MARTIAN' | 'SUI' | 'NONE';
 
 export interface User {
   id: string;
