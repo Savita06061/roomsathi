@@ -1,20 +1,110 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# 🛏️ RoomSathi — Decentralized Room Booking Platform
 
-# Run and deploy your AI Studio app
+RoomSathi is a next-generation **Web3-powered room booking platform** that enables users to discover, explore, and book rental spaces globally using blockchain technology.
 
-This contains everything you need to run your app locally.
+The platform combines **real-world utility (room rentals)** with **decentralized payments**, offering a seamless and transparent booking experience.
 
-View your app in AI Studio: https://ai.studio/apps/8a60288f-77ab-4067-8a5c-63794b0c942e
+---
 
-## Run Locally
+## 🚀 Key Features
 
-**Prerequisites:**  Node.js
+- 🌍 Global room discovery and booking  
+- 🔐 Secure Web3 wallet authentication  
+- 💰 Crypto payments using Aptos (Testnet)  
+- ⚡ Built-in faucet integration for testing  
+- 🎨 Smooth UI/UX with modern animations  
+- 🌐 Multi-language support  
+- 📱 Responsive across all devices  
 
+---
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## 🧱 Tech Stack
+
+- **Frontend:** React + TypeScript  
+- **Build Tool:** Vite  
+- **Blockchain:** Aptos (Testnet)  
+- **Wallet Integration:** Martian Wallet, Sui Wallet  
+- **Styling:** CSS  
+
+---
+
+## 📂 Project Structure
+
+```
+roomsathi/
+├── components/        # Reusable UI components
+├── services/          # Business logic & blockchain interaction
+├── types.ts           # Type definitions
+├── constants.ts       # Global constants
+├── App.tsx            # Root component
+├── index.tsx          # Application entry point
+└── README.md          # Documentation
+```
+
+---
+
+## ⚙️ Getting Started
+
+### Installation
+
+```bash
+npm install
+```
+
+### Environment Setup
+
+Create a `.env.local` file:
+
+```
+GEMINI_API_KEY=your_api_key_here
+```
+
+### Run Locally
+
+```bash
+npm run dev
+```
+
+---
+
+## 🔗 Live Application
+
+👉 https://roomsathi.vercel.app/
+
+---
+
+## 💡 Platform Workflow
+
+1. Connect your Web3 wallet  
+2. Browse available rooms  
+3. Claim test tokens via faucet  
+4. Book rooms using APT tokens  
+5. Transactions are processed on-chain  
+
+---
+
+## 🛣️ Roadmap
+
+- 🔄 Mainnet deployment  
+- 💳 Fiat payment integration  
+- 🏠 Room owner dashboard  
+- 📊 Advanced analytics  
+- 📱 Mobile application  
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome. Feel free to fork the repository and submit pull requests.
+
+---
+
+## 📄 License
+
+MIT License
+
+---
+
+## 👨‍💻 Author
+
+**Savita06061**
