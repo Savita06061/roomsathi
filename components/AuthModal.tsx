@@ -44,35 +44,32 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLoginSuccess, language
   };
 
   const connectPetra = async () => {
-    // Aptos Wallet Standard detection
-    const getAptosWallet = () => {
-      if ((window as any).aptos) return (window as any).aptos;
-      // Many modern wallets follow the 'aptos' standard but might be accessible through other means
-      // but 'window.aptos' is the primary standard entry point.
-      return null;
-    };
-
-    const aptos = getAptosWallet();
+    // Use the standard window.aptos which is the modern way to connect
+    const aptos = (window as any).aptos;
     
     if (!aptos) {
-      alert(language === 'HI' 
-        ? 'पेट्रा वॉलेट नहीं मिला! कृपया एक्सटेंशन इंस्टॉल करें और इस ऐप को "न्यू टैब" में खोलें।' 
-        : 'Petra Wallet not detected! Please ensure the extension is installed and open the app in a "New Tab" for extension support.');
-      window.open('https://petra.app/', '_blank');
+      // Prompt user to open in new tab if wallet is not detected (often true in iframes)
+      const confirmed = confirm(language === 'HI' 
+        ? 'सुरक्षा कारणों से वॉलेट को "न्यू टैब" में खोलना आवश्यक है। क्या आप अभी ओपन करना चाहते हैं?' 
+        : 'For security, browser wallets require opening the app in a "New Tab". Opening now...');
+        
+      if (confirmed) {
+        window.open(window.location.href, '_blank');
+      }
       return;
     }
 
     setIsWalletLoading('PETRA');
     try {
-      // Connect to Aptos using standard window.aptos.connect()
-      const result = await aptos.connect();
-      const address = result.address;
+      // Attempt connection using standard Aptos Wallet standard
+      const response = await aptos.connect();
+      const address = response.address;
       
-      if (!address) throw new Error("No address returned from wallet");
+      if (!address) throw new Error("Aptos address not found");
 
       onLoginSuccess({
         id: 'aptos_' + (typeof address === 'string' ? address.slice(0, 8) : 'user'),
-        name: `Aptos ${mode}`,
+        name: `Aptos Member`,
         email: `${typeof address === 'string' ? address.slice(0, 6) : 'user'}...${typeof address === 'string' ? address.slice(-4) : ''}@aptos.web3`,
         role: mode,
         avatar: `https://api.dicebear.com/7.x/identicon/svg?seed=${address}`,
@@ -80,10 +77,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLoginSuccess, language
         walletType: 'PETRA'
       });
     } catch (error: any) {
-      console.error("Petra Connection Error:", error);
+      console.error("Wallet Connection Error:", error);
       alert(language === 'HI'
-        ? `कनेक्शन विफल: ${error.message || 'वॉलेट ने रिजेक्ट कर दिया'}. कृपया सुनिश्चित करें कि आप न्यू टैब में हैं।`
-        : `Connection Failed: ${error.message || 'Wallet rejected the request'}. Ensure you are in a New Tab.`);
+        ? `त्रुटि: ${error.message || 'वॉलेट ने मना किया'}. कृपया सुनिश्चित करें कि आप न्यू टैब में हैं।`
+        : `Error: ${error.message || 'Request rejected'}. Ensure you are in a Full Tab.`);
     } finally {
       setIsWalletLoading('NONE');
     }
