@@ -59,11 +59,14 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing, isAdmin, onEdit, onD
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
         
         <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-4 py-2.5 rounded-[1.5rem] shadow-xl border border-white/20 flex flex-col items-end">
-          <div className="flex items-center gap-1.5 text-orange-600">
-             <img src="https://cryptologos.cc/logos/aptos-apt-logo.svg?v=025" className="w-4 h-4" alt="APT" />
-             <span className="text-xl font-black tracking-tighter">{(listing.rentPrice / 750).toFixed(2)} APT</span>
+          <div className="flex items-center gap-2">
+            <img src="https://cryptologos.cc/logos/aptos-apt-logo.svg?v=025" className="w-4 h-4" alt="APT" />
+            <span className="text-xl font-black text-slate-900 tracking-tighter">{(listing.rentPrice / 750).toFixed(2)} APT</span>
           </div>
-          <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">₹{listing.rentPrice}/mo</span>
+          <div className="flex items-center gap-1.5 opacity-60">
+             <div className="bg-blue-600 w-2.5 h-2.5 rounded-full"></div>
+             <span className="text-[10px] font-black text-slate-900 tracking-tight">{(listing.rentPrice / 75).toFixed(1)} ShelbyUSD</span>
+          </div>
         </div>
         
         <div className="absolute bottom-6 left-6 flex flex-wrap gap-2">

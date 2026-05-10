@@ -72,16 +72,24 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLoginSuccess, language
   };
 
   const connectPetra = async () => {
-    if (!(window as any).aptos) {
-      alert(language === 'HI' ? 'कृपया पेट्रा वॉलेट इंस्टॉल करें!' : 'Please install Petra Wallet!');
+    const isPetraInstalled = (window as any).aptos;
+    
+    if (!isPetraInstalled) {
+      alert(language === 'HI' 
+        ? 'पेट्रा वॉलेट नहीं मिला! कृपया इसे इंस्टॉल करें और फिर इस पेज को "न्यू टैब" में खोलें।' 
+        : 'Petra Wallet not detected! Please install it and open this app in a "New Tab" for extension support.');
       window.open('https://petra.app/', '_blank');
       return;
     }
+
     setIsWalletLoading('PETRA');
     try {
+      // Direct connection attempt
       const result = await (window as any).aptos.connect();
       const address = result.address;
       
+      if (!address) throw new Error("No address returned");
+
       onLoginSuccess({
         id: 'aptos_' + address.slice(0, 8),
         name: `Aptos ${mode}`,
@@ -91,8 +99,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLoginSuccess, language
         walletAddress: address,
         walletType: 'PETRA'
       });
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      console.error("Petra Connection Error:", error);
+      alert(language === 'HI'
+        ? `कनेक्शन विफल: ${error.message || 'वॉलेट ने रिजेक्ट कर दिया'}. कृपया न्यू टैब में कोशिश करें।`
+        : `Connection Failed: ${error.message || 'Wallet rejected the request'}. Please try in a New Tab.`);
     } finally {
       setIsWalletLoading('NONE');
     }
@@ -312,12 +323,12 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLoginSuccess, language
                     </div>
                     <div>
                       <h5 className="text-sm font-black text-slate-900 uppercase tracking-tight">Testnet Faucet Hub</h5>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Free Demo APT / ETH Tokens</p>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Free Demo APT / SUSD / ETH Tokens</p>
                     </div>
                   </div>
                   <p className="text-[11px] font-medium text-slate-600 leading-relaxed relative z-10">
                     You need test tokens to simulate room bookings and property listings. 
-                    If you don't see the faucet in the header after connecting, use these official links:
+                    If you don't see the faucet in the header (APT or SUSD) after connecting, use these official links:
                   </p>
                   <div className="flex flex-col gap-3 relative z-10">
                     <motion.button

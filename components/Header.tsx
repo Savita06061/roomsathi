@@ -84,7 +84,7 @@ const Header: React.FC<HeaderProps> = ({ onLogout, user, language, setLanguage }
                         <>
                            <Zap size={16} fill="white" className="animate-pulse" />
                            <div className="flex flex-col items-start leading-none">
-                             <span className="text-[10px] font-black uppercase tracking-widest text-orange-100">Claim {user.walletType === 'PETRA' ? 'APT' : 'ETH'}</span>
+                             <span className="text-[10px] font-black uppercase tracking-widest text-orange-100">Claim {user.walletType === 'PETRA' ? 'APT/SUSD' : 'ETH'}</span>
                              <span className="text-[12px] font-black uppercase tracking-tighter">Testnet Faucet</span>
                            </div>
                         </>

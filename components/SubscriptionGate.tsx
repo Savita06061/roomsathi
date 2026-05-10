@@ -135,9 +135,17 @@ const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onSubscribe, langua
               </div>
 
               <div className="p-12">
-                <div className="flex items-baseline gap-3 mb-12">
-                   <span className="text-8xl font-black text-slate-900 tracking-tighter">₹{isOwner ? '49' : '199'}</span>
-                   <span className="text-slate-300 line-through text-3xl font-bold">₹{isOwner ? '199' : '499'}</span>
+                <div className="space-y-4 mb-12">
+                  <div className="flex items-baseline gap-3">
+                     <span className="text-6xl font-black text-slate-900 tracking-tighter">{isOwner ? '0.1' : '0.5'} APT</span>
+                     <span className="text-slate-300 line-through text-3xl font-bold">{isOwner ? '0.5' : '1.0'} APT</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-black text-slate-400 uppercase tracking-widest leading-none">Or pay with stablecoin:</span>
+                    <div className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-[11px] font-black tracking-tight border border-blue-100 flex items-center gap-1.5 shadow-sm">
+                      <Zap size={10} fill="currentColor" /> {isOwner ? '1.0' : '5.0'} ShelbyUSD
+                    </div>
+                  </div>
                 </div>
 
                 <div className="space-y-5 mb-12">
