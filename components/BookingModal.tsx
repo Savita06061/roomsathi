@@ -16,6 +16,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ listing, onClose, onConfirm
   const [isFaucetLoading, setIsFaucetLoading] = useState(false);
 
   const aptPrice = (listing.rentPrice / 750).toFixed(2);
+  const susdPrice = (listing.rentPrice / 75).toFixed(1);
 
   const handleFaucet = async () => {
     if (!(window as any).aptos) {
@@ -57,6 +58,37 @@ const BookingModal: React.FC<BookingModalProps> = ({ listing, onClose, onConfirm
         function: "0x1::coin::transfer",
         type: "entry_function_payload",
         type_arguments: ["0x1::aptos_coin::AptosCoin"],
+      };
+      
+      const response = await (window as any).aptos.signAndSubmitTransaction(transaction);
+      console.log('TX Hash:', response.hash);
+      
+      setPaymentStatus('SUCCESS');
+      setTimeout(() => {
+        onConfirm(name || 'Web3 User', phone || '9999999999');
+      }, 2000);
+    } catch (error) {
+      console.error(error);
+      setPaymentStatus('IDLE');
+      alert('Payment Failed or Cancelled');
+    }
+  };
+
+  const handleSusdPayment = async () => {
+    if (!(window as any).aptos) {
+      alert('Petra Wallet not found! Please connect Petra first.');
+      return;
+    }
+    
+    setPaymentStatus('PENDING');
+    try {
+      // ShelbyUSD Transfer on Testnet
+      // Assuming SUSD coin address on Aptos Testnet
+      const transaction = {
+        arguments: ["0x264903328e9cf64188fa642a86847849e7b233a0ec3bdde0a3e8e19e075f10b7", (parseFloat(susdPrice) * 1000000).toString()], // amount with 6 decimals
+        function: "0x1::coin::transfer",
+        type: "entry_function_payload",
+        type_arguments: ["0x264903328e9cf64188fa642a86847849e7b233a0ec3bdde0a3e8e19e075f10b7::shelby_coin::ShelbyCoin"], 
       };
       
       const response = await (window as any).aptos.signAndSubmitTransaction(transaction);
@@ -200,7 +232,22 @@ const BookingModal: React.FC<BookingModalProps> = ({ listing, onClose, onConfirm
                      {paymentStatus === 'PENDING' ? <Loader2 className="animate-spin" /> : (
                        <>
                          <img src="https://cryptologos.cc/logos/aptos-apt-logo.svg?v=025" className="w-6 h-6 invert" alt="APT" />
-                         Pay {aptPrice} APT (Testnet)
+                         Pay {aptPrice} APT
+                       </>
+                     )}
+                   </motion.button>
+
+                   <motion.button 
+                     whileHover={{ scale: 1.02, y: -2 }}
+                     whileTap={{ scale: 0.98 }}
+                     onClick={handleSusdPayment}
+                     disabled={paymentStatus === 'PENDING'}
+                     className="w-full bg-blue-600 text-white py-4 rounded-2xl font-black text-sm shadow-xl flex items-center justify-center gap-3 transition-all"
+                   >
+                     {paymentStatus === 'PENDING' ? <Loader2 className="animate-spin" /> : (
+                       <>
+                         <div className="w-5 h-5 bg-white rounded-full"></div>
+                         Pay {susdPrice} ShelbyUSD
                        </>
                      )}
                    </motion.button>

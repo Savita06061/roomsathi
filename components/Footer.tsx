@@ -73,6 +73,13 @@ const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
                  <p className="text-[10px] text-slate-500 font-bold">Mr. Vinay Chandravanshi</p>
                </div>
             </div>
+            <div className="flex items-start gap-3">
+               <div className="mt-1 text-orange-500"><Mail size={16} /></div>
+               <div>
+                 <p className="text-white font-bold text-xs">roomsathi@gmail.com</p>
+                 <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Official Support</p>
+               </div>
+            </div>
             <div className="flex items-center gap-3">
                <div className="text-orange-500"><MapPin size={16} /></div>
                <p className="text-xs">World Wide Web, Decentralized Hub</p>

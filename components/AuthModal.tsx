@@ -44,8 +44,15 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLoginSuccess, language
   };
 
   const connectPetra = async () => {
-    // Detect Aptos/Petra using window properties
-    const aptos = (window as any).aptos || (window as any).petra;
+    // Aptos Wallet Standard detection
+    const getAptosWallet = () => {
+      if ((window as any).aptos) return (window as any).aptos;
+      // Many modern wallets follow the 'aptos' standard but might be accessible through other means
+      // but 'window.aptos' is the primary standard entry point.
+      return null;
+    };
+
+    const aptos = getAptosWallet();
     
     if (!aptos) {
       alert(language === 'HI' 
@@ -57,7 +64,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLoginSuccess, language
 
     setIsWalletLoading('PETRA');
     try {
-      // Connect to Aptos
+      // Connect to Aptos using standard window.aptos.connect()
       const result = await aptos.connect();
       const address = result.address;
       
@@ -66,10 +73,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLoginSuccess, language
       onLoginSuccess({
         id: 'aptos_' + (typeof address === 'string' ? address.slice(0, 8) : 'user'),
         name: `Aptos ${mode}`,
-        email: `${address.slice(0, 6)}...${address.slice(-4)}@aptos.web3`,
+        email: `${typeof address === 'string' ? address.slice(0, 6) : 'user'}...${typeof address === 'string' ? address.slice(-4) : ''}@aptos.web3`,
         role: mode,
         avatar: `https://api.dicebear.com/7.x/identicon/svg?seed=${address}`,
-        walletAddress: address,
+        walletAddress: typeof address === 'string' ? address : '',
         walletType: 'PETRA'
       });
     } catch (error: any) {
@@ -294,7 +301,16 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLoginSuccess, language
                       className="w-full bg-white border border-slate-200 text-slate-900 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:border-orange-600 hover:text-orange-600 transition-all shadow-sm flex items-center justify-center gap-2"
                     >
                       <img src="https://petra.app/favicon.ico" className="w-4 h-4" alt="Aptos" />
-                      Official Aptos Faucet
+                      Official APT Faucet
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => window.open('https://shelby.exchange/faucet', '_blank')}
+                      className="w-full bg-white border border-slate-200 text-slate-900 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:border-blue-600 hover:text-blue-600 transition-all shadow-sm flex items-center justify-center gap-2"
+                    >
+                      <div className="w-4 h-4 bg-blue-600 rounded-full"></div>
+                      Get ShelbyUSD Tokens
                     </motion.button>
                   </div>
                 </div>
