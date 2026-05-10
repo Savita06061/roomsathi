@@ -263,7 +263,7 @@ function App() {
             <AuthModal 
               mode={authMode} 
               onClose={() => setAuthMode(null)} 
-              onSuccess={handleLoginSuccess}
+              onLoginSuccess={handleLoginSuccess}
               language={language}
             />
           )}

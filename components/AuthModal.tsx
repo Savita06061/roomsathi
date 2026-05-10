@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Mail, Lock, User, Key, ShieldCheck, UserCheck, Home, Settings, Loader2, CheckCircle2, ShieldAlert, Fingerprint } from 'lucide-react';
-import { Language, User as UserType, UserRole } from '../types';
+import { X, Mail, Lock, User, Key, ShieldCheck, UserCheck, Home, Settings, Loader2, CheckCircle2, ShieldAlert, Fingerprint, Wallet } from 'lucide-react';
+import { Language, User as UserType, UserRole, WalletType } from '../types';
 import { translations } from '../translations';
+import { BrowserProvider } from 'ethers';
 
 interface AuthModalProps {
   onClose: () => void;
@@ -20,8 +21,63 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLoginSuccess, language
   const [name, setName] = useState('');
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [isLoading, setIsLoading] = useState(false);
+  const [isWalletLoading, setIsWalletLoading] = useState<WalletType>('NONE');
   
   const t = translations[language];
+
+  const connectMetaMask = async () => {
+    if (!(window as any).ethereum) {
+      alert(language === 'HI' ? 'कृपया मेटामास्क इंस्टॉल करें!' : 'Please install MetaMask!');
+      return;
+    }
+    setIsWalletLoading('METAMASK');
+    try {
+      const provider = new BrowserProvider((window as any).ethereum);
+      const accounts = await provider.send("eth_requestAccounts", []);
+      const address = accounts[0];
+      
+      onLoginSuccess({
+        id: 'eth_' + address.slice(0, 8),
+        name: `Web3 ${mode}`,
+        email: `${address.slice(0, 6)}...${address.slice(-4)}@eth.web3`,
+        role: mode,
+        avatar: `https://api.dicebear.com/7.x/identicon/svg?seed=${address}`,
+        walletAddress: address,
+        walletType: 'METAMASK'
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsWalletLoading('NONE');
+    }
+  };
+
+  const connectPetra = async () => {
+    if (!(window as any).aptos) {
+      alert(language === 'HI' ? 'कृपया पेट्रा वॉलेट इंस्टॉल करें!' : 'Please install Petra Wallet!');
+      window.open('https://petra.app/', '_blank');
+      return;
+    }
+    setIsWalletLoading('PETRA');
+    try {
+      const result = await (window as any).aptos.connect();
+      const address = result.address;
+      
+      onLoginSuccess({
+        id: 'aptos_' + address.slice(0, 8),
+        name: `Aptos ${mode}`,
+        email: `${address.slice(0, 6)}...${address.slice(-4)}@aptos.web3`,
+        role: mode,
+        avatar: `https://api.dicebear.com/7.x/identicon/svg?seed=${address}`,
+        walletAddress: address,
+        walletType: 'PETRA'
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsWalletLoading('NONE');
+    }
+  };
 
   const mockDb = [
     { email: 'admin@saathi.com', password: '123', role: 'ADMIN', name: 'Super Admin' },
@@ -196,6 +252,34 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLoginSuccess, language
                     </>
                   )}
                 </motion.button>
+
+                {/* Web3 Connect Options */}
+                <div className="space-y-4 pt-4 border-t border-slate-100">
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-center">Protocol Access via Web3</p>
+                  <div className="grid grid-cols-2 gap-4">
+                    <motion.button
+                      type="button"
+                      whileHover={{ scale: 1.02, y: -2 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={connectMetaMask}
+                      className="flex items-center justify-center gap-2 bg-white border-2 border-slate-50 py-4 rounded-2xl font-black text-xs text-slate-900 shadow-sm hover:border-orange-500 transition-all"
+                    >
+                      {isWalletLoading === 'METAMASK' ? <Loader2 className="animate-spin" size={16} /> : <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Mirror_Logo.svg" className="w-5 h-5" alt="MetaMask" />}
+                      MetaMask
+                    </motion.button>
+                    <motion.button
+                      type="button"
+                      whileHover={{ scale: 1.02, y: -2 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={connectPetra}
+                      className="flex items-center justify-center gap-2 bg-white border-2 border-slate-50 py-4 rounded-2xl font-black text-xs text-slate-900 shadow-sm hover:border-orange-500 transition-all"
+                    >
+                      {isWalletLoading === 'PETRA' ? <Loader2 className="animate-spin" size={16} /> : <img src="https://petra.app/favicon.ico" className="w-5 h-5 rounded-full" alt="Petra" />}
+                      Petra
+                    </motion.button>
+                  </div>
+                </div>
+
                 <div className="flex items-center justify-center gap-4 pt-4">
                   <div className="h-px flex-1 bg-slate-100"></div>
                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Home, LogOut, Languages, User as UserIcon, Settings, ShieldCheck } from 'lucide-react';
+import { Home, LogOut, Languages, User as UserIcon, Settings, ShieldCheck, Wallet } from 'lucide-react';
 import { Language, User } from '../types';
 import { translations } from '../translations';
 
@@ -44,14 +44,28 @@ const Header: React.FC<HeaderProps> = ({ onLogout, user, language, setLanguage }
               animate={{ opacity: 1, x: 0 }}
               className="flex items-center gap-3 px-4 py-2 bg-slate-50 rounded-2xl border border-slate-100 group"
             >
-              <div className="relative">
-                <img src={user.avatar} alt={user.name} className="w-8 h-8 rounded-full shadow-md border-2 border-white" />
-                <div className="absolute -bottom-1 -right-1 bg-green-500 w-3 h-3 rounded-full border-2 border-white shadow-sm"></div>
-              </div>
-              <div className="hidden md:block">
-                <p className="text-[9px] font-black text-slate-400 leading-none mb-1 uppercase tracking-widest">{user.role}</p>
-                <p className="text-sm font-black text-slate-900 leading-none tracking-tight">{user.name.split(' ')[0]}</p>
-              </div>
+              {user.walletAddress ? (
+                <div className="flex items-center gap-3">
+                   <div className="bg-white p-2 rounded-xl shadow-sm border border-slate-100 text-orange-600">
+                      <Wallet size={16} />
+                   </div>
+                   <div className="hidden md:block">
+                      <p className="text-[9px] font-black text-slate-400 leading-none mb-1 uppercase tracking-widest">{user.walletType}</p>
+                      <p className="text-xs font-mono font-black text-slate-900 leading-none">{user.walletAddress.slice(0, 6)}...{user.walletAddress.slice(-4)}</p>
+                   </div>
+                </div>
+              ) : (
+                <>
+                  <div className="relative">
+                    <img src={user.avatar} alt={user.name} className="w-8 h-8 rounded-full shadow-md border-2 border-white" />
+                    <div className="absolute -bottom-1 -right-1 bg-green-500 w-3 h-3 rounded-full border-2 border-white shadow-sm"></div>
+                  </div>
+                  <div className="hidden md:block">
+                    <p className="text-[9px] font-black text-slate-400 leading-none mb-1 uppercase tracking-widest">{user.role}</p>
+                    <p className="text-sm font-black text-slate-900 leading-none tracking-tight">{user.name.split(' ')[0]}</p>
+                  </div>
+                </>
+              )}
             </motion.div>
           )}
 

@@ -12,12 +12,16 @@ export type ListingStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
 
 export type UserRole = 'ADMIN' | 'CUSTOMER' | 'OWNER';
 
+export type WalletType = 'METAMASK' | 'PETRA' | 'NONE';
+
 export interface User {
   id: string;
   name: string;
   email: string;
   avatar: string;
   role: UserRole;
+  walletAddress?: string;
+  walletType?: WalletType;
 }
 
 export interface Listing {

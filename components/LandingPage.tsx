@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Home, Languages, ArrowRight, ShieldCheck, Users, MapPin, Lock, Settings, PhoneCall, Map, Zap, Star, ShieldAlert, Clock } from 'lucide-react';
+import { Home, Languages, ArrowRight, ShieldCheck, Users, MapPin, Lock, Settings, PhoneCall, Map, Zap, Star, ShieldAlert, Clock, Wallet } from 'lucide-react';
 import { ViewState, Language, User } from '../types';
 import { translations } from '../translations';
 import Footer from './Footer';
@@ -46,6 +46,15 @@ const LandingPage: React.FC<LandingPageProps> = ({
           </motion.div>
           
           <div className="flex items-center gap-4">
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={onLoginCustomer}
+              className="px-6 py-3 bg-white text-slate-900 border-2 border-slate-900 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-slate-900 hover:text-white transition-all shadow-lg"
+            >
+              <Wallet size={16} />
+              Connect Wallet
+            </motion.button>
             <motion.button 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
