@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Listing, Language, User } from '../types';
-import { Plus, LogOut, Home, Settings, Clock, CheckCircle, XCircle, ShieldCheck, MapPin, LayoutDashboard } from 'lucide-react';
+import { Plus, LogOut, Home, Settings, Clock, CheckCircle, XCircle, ShieldCheck, MapPin, LayoutDashboard, Sun, Moon } from 'lucide-react';
 import SubscriptionGate from './SubscriptionGate';
 
 interface OwnerDashboardProps {
@@ -12,17 +12,19 @@ interface OwnerDashboardProps {
   onSubscribe: () => void;
   language: Language;
   user: User | null;
+  theme: 'light' | 'dark';
+  setTheme: (theme: 'light' | 'dark') => void;
 }
 
 const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ 
-  listings, onAdd, onLogout, isSubscribed, onSubscribe, language, user 
+  listings, onAdd, onLogout, isSubscribed, onSubscribe, language, user, theme, setTheme 
 }) => {
   if (!isSubscribed) {
     return (
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="min-h-screen bg-white"
+        className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300"
       >
         <nav className="bg-slate-900 text-white shadow-2xl p-6 sticky top-0 z-50">
            <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -32,6 +34,17 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
                 </div>
                 <span className="text-xl font-black tracking-tighter">Owner<span className="text-orange-500">Portal</span></span>
               </div>
+              {/* Light/Dark Toggle */}
+              <motion.button 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+                className="p-2.5 bg-white/10 text-orange-400 rounded-xl border border-white/5 flex items-center justify-center cursor-pointer mr-2"
+                title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+              >
+                {theme === 'light' ? <Moon size={14} /> : <Sun size={14} />}
+              </motion.button>
+
               <motion.button 
                 whileHover={{ x: 5 }}
                 onClick={onLogout} 
@@ -47,7 +60,7 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-300">
       <motion.nav 
         initial={{ y: -100 }}
         animate={{ y: 0 }}
@@ -73,6 +86,17 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-300">{user.name}</span>
               </div>
             )}
+            {/* Light/Dark Toggle */}
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+              className="p-3 bg-white/10 text-orange-400 rounded-xl border border-white/5 flex items-center justify-center cursor-pointer transition-colors"
+              title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+            >
+              {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+            </motion.button>
+
             <motion.button 
               whileHover={{ scale: 1.05, backgroundColor: '#ef4444' }}
               whileTap={{ scale: 0.95 }}
@@ -90,10 +114,10 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-[3.5rem] shadow-2xl border border-slate-100 p-10 lg:p-16 mb-12 flex flex-col md:flex-row justify-between items-center gap-8 relative overflow-hidden"
+          className="bg-white dark:bg-slate-900 rounded-[3.5rem] shadow-2xl dark:shadow-none border border-slate-100 dark:border-slate-850 p-10 lg:p-16 mb-12 flex flex-col md:flex-row justify-between items-center gap-8 relative overflow-hidden"
         >
           <div className="relative z-10">
-            <h2 className="text-4xl lg:text-5xl font-black text-slate-900 tracking-tighter mb-3">
+            <h2 className="text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tighter mb-3">
               {language === 'HI' ? `नमस्ते, ${user?.name?.split(' ')[0]}!` : `Welcome, ${user?.name?.split(' ')[0]}!`}
             </h2>
             <p className="text-slate-400 font-medium text-lg leading-relaxed max-w-md">
@@ -118,7 +142,7 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
           <div className="bg-slate-900 p-2 rounded-xl text-white">
             <Settings size={20} />
           </div>
-          <h3 className="text-2xl font-black text-slate-900 tracking-tight">My Active Listings</h3>
+          <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">My Active Listings</h3>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -131,7 +155,7 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: i * 0.1 }}
                   key={listing.id} 
-                  className="bg-white rounded-[3rem] shadow-xl overflow-hidden border border-slate-100 flex flex-col group hover:shadow-2xl transition-all duration-500"
+                  className="bg-white dark:bg-slate-900 rounded-[3rem] shadow-xl dark:shadow-none overflow-hidden border border-slate-100 dark:border-slate-850 flex flex-col group hover:shadow-2xl transition-all duration-500"
                 >
                    <div className="h-56 bg-slate-200 relative overflow-hidden">
                       <motion.img 
@@ -173,7 +197,7 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
                       <div className="flex justify-between items-start mb-2">
                         <div className="flex items-center gap-2 text-orange-600">
                           <MapPin size={16} />
-                          <h4 className="font-black text-slate-900 text-xl tracking-tight">{listing.locality}</h4>
+                          <h4 className="font-black text-slate-900 dark:text-white text-xl tracking-tight">{listing.locality}</h4>
                         </div>
                         <span className="font-black text-2xl text-orange-600 tracking-tighter">₹{listing.rentPrice.toLocaleString()}</span>
                       </div>
@@ -198,12 +222,12 @@ const OwnerDashboard: React.FC<OwnerDashboardProps> = ({
               <motion.div 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="col-span-full bg-white p-24 rounded-[4rem] text-center border-dashed border-4 border-slate-100 flex flex-col items-center"
+                className="col-span-full bg-white dark:bg-slate-900 p-24 rounded-[4rem] text-center border-dashed border-4 border-slate-100 dark:border-slate-800 flex flex-col items-center"
               >
                  <div className="bg-slate-50 p-8 rounded-full text-slate-200 mb-6">
                     <Home size={64} />
                  </div>
-                 <h4 className="text-2xl font-black text-slate-900 mb-2 tracking-tight">No Active Listings</h4>
+                 <h4 className="text-2xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">No Active Listings</h4>
                  <p className="text-slate-400 font-medium uppercase text-[10px] tracking-widest">Start by adding your first property</p>
               </motion.div>
             )}

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -18,6 +18,19 @@ import { translations } from './translations';
 import { SearchX } from 'lucide-react';
 
 function App() {
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    return (localStorage.getItem('theme') as 'light' | 'dark') || 'light';
+  });
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
   const [currentView, setCurrentView] = useState<ViewState>('LANDING');
   const [language, setLanguage] = useState<Language>('HI');
   const [user, setUser] = useState<User | null>(null);
@@ -131,6 +144,8 @@ function App() {
             user={user} 
             language={language}
             setLanguage={setLanguage}
+            theme={theme}
+            setTheme={setTheme}
           />
         </motion.div>
       );
@@ -157,6 +172,8 @@ function App() {
             onUpdateBookingStatus={handleUpdateBookingStatus}
             onLogout={handleLogout}
             language={language}
+            theme={theme}
+            setTheme={setTheme}
           />
         </motion.div>
       );
@@ -182,6 +199,8 @@ function App() {
             onSubscribe={() => setIsOwnerSubscribed(true)}
             language={language}
             user={user}
+            theme={theme}
+            setTheme={setTheme}
           />
         </motion.div>
       );
@@ -194,9 +213,9 @@ function App() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="min-h-screen bg-gray-50 flex flex-col"
+        className="min-h-screen bg-gray-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col transition-colors duration-300"
       >
-        <Header onLogout={handleLogout} user={user} language={language} setLanguage={setLanguage} />
+        <Header onLogout={handleLogout} user={user} language={language} setLanguage={setLanguage} theme={theme} setTheme={setTheme} />
         <AnimatePresence mode="wait">
           {!isSubscribed ? (
             <motion.div
@@ -261,7 +280,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col transition-colors duration-300">
       <AnimatePresence mode="wait">
         {renderView()}
       </AnimatePresence>

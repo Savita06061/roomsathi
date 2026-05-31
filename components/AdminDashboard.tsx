@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Listing, Booking, ListingStatus, Language } from '../types';
-import { Plus, Edit, Trash2, LogOut, CheckCircle, XCircle, Bell, Home, Settings, Users, BarChart3, Database, ShieldCheck, MapPin, Search } from 'lucide-react';
+import { Plus, Edit, Trash2, LogOut, CheckCircle, XCircle, Bell, Home, Settings, Users, BarChart3, Database, ShieldCheck, MapPin, Search, Sun, Moon } from 'lucide-react';
 
 interface AdminDashboardProps {
   listings: Listing[];
@@ -13,10 +13,12 @@ interface AdminDashboardProps {
   onUpdateBookingStatus: (id: string, status: 'APPROVED' | 'REJECTED') => void;
   onLogout: () => void;
   language: Language;
+  theme: 'light' | 'dark';
+  setTheme: (theme: 'light' | 'dark') => void;
 }
 
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ 
-  listings, bookings, onAdd, onEdit, onDelete, onUpdateListingStatus, onUpdateBookingStatus, onLogout, language
+  listings, bookings, onAdd, onEdit, onDelete, onUpdateListingStatus, onUpdateBookingStatus, onLogout, language, theme, setTheme
 }) => {
   const [activeTab, setActiveTab] = useState<'LISTINGS' | 'BOOKINGS' | 'REQUESTS'>('LISTINGS');
   const [searchQuery, setSearchQuery] = useState('');
@@ -53,6 +55,17 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse"></div>
                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-300">System Live</span>
              </div>
+             {/* Light/Dark Toggle */}
+             <motion.button 
+               whileHover={{ scale: 1.05 }}
+               whileTap={{ scale: 0.95 }}
+               onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+               className="p-3.5 bg-white/10 text-orange-400 rounded-2xl border border-white/5 flex items-center justify-center cursor-pointer transition-colors"
+               title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+             >
+               {theme === 'light' ? <Moon size={22} /> : <Sun size={22} />}
+             </motion.button>
+
              <motion.button 
                whileHover={{ scale: 1.05, backgroundColor: '#ef4444' }}
                whileTap={{ scale: 0.95 }}

@@ -1,12 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
 }
 
 body {
-  @apply bg-orange-50/30 text-gray-900;
+  @apply bg-orange-50/30 dark:bg-slate-950 text-gray-900 dark:text-slate-100 transition-colors duration-300;
 }
 
 .glass-card {

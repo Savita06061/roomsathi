@@ -37,7 +37,7 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing, isAdmin, onEdit, onD
   return (
     <motion.div 
       layout
-      className="bg-white rounded-[2.5rem] shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 flex flex-col h-full relative group overflow-hidden"
+      className="bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-slate-850 flex flex-col h-full relative group overflow-hidden"
     >
       
       {isAdmin && (
@@ -58,14 +58,14 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing, isAdmin, onEdit, onD
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
         
-        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-4 py-2.5 rounded-[1.5rem] shadow-xl border border-white/20 flex flex-col items-end">
+        <div className="absolute top-4 right-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-4 py-2.5 rounded-[1.5rem] shadow-xl border border-white/20 dark:border-slate-800 flex flex-col items-end animate-fade-in">
           <div className="flex items-center gap-2">
             <img src="https://cryptologos.cc/logos/aptos-apt-logo.svg?v=025" className="w-4 h-4" alt="APT" />
-            <span className="text-xl font-black text-slate-900 tracking-tighter">{(listing.rentPrice / 750).toFixed(2)} APT</span>
+            <span className="text-xl font-black text-slate-900 dark:text-white tracking-tighter">{(listing.rentPrice / 750).toFixed(2)} APT</span>
           </div>
           <div className="flex items-center gap-1.5 opacity-60">
              <div className="bg-blue-600 w-2.5 h-2.5 rounded-full"></div>
-             <span className="text-[10px] font-black text-slate-900 tracking-tight">{(listing.rentPrice / 75).toFixed(1)} ShelbyUSD</span>
+             <span className="text-[10px] font-black text-slate-900 dark:text-slate-300 tracking-tight">{(listing.rentPrice / 75).toFixed(1)} ShelbyUSD</span>
           </div>
         </div>
         
@@ -95,19 +95,19 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing, isAdmin, onEdit, onD
         <div className="flex-1">
           <div className="flex items-center gap-2 text-orange-600 mb-2">
              <MapPin size={16} className="flex-shrink-0" />
-             <h3 className="text-2xl font-black text-slate-900 tracking-tight leading-none">{listing.locality}</h3>
+             <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight leading-none">{listing.locality}</h3>
           </div>
-          <p className="text-sm text-slate-500 font-medium mb-6 line-clamp-1 leading-relaxed">{listing.address}</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mb-6 line-clamp-1 leading-relaxed">{listing.address}</p>
 
           {/* New Metadata Row */}
-          <div className="grid grid-cols-2 gap-4 mb-8 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+          <div className="grid grid-cols-2 gap-4 mb-8 bg-slate-50 dark:bg-slate-950/40 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
              <div>
-                <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Availablity</p>
-                <p className="text-xs font-black text-slate-900 capitalize">Immediate</p>
+                <p className="text-[8px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-0.5">Availablity</p>
+                <p className="text-xs font-black text-slate-900 dark:text-slate-200 capitalize">Immediate</p>
              </div>
-             <div className="border-l border-slate-200 pl-4">
-                <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Security</p>
-                <p className="text-xs font-black text-slate-900 italic">Negotiable</p>
+             <div className="border-l border-slate-200 dark:border-slate-800 pl-4">
+                <p className="text-[8px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-0.5">Security</p>
+                <p className="text-xs font-black text-slate-900 dark:text-slate-200 italic">Negotiable</p>
              </div>
           </div>
 
@@ -116,7 +116,7 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing, isAdmin, onEdit, onD
               <motion.span 
                 key={index} 
                 whileHover={{ scale: 1.05 }}
-                className="inline-flex items-center bg-white text-slate-600 text-[10px] font-black px-4 py-2 rounded-xl border border-slate-100 shadow-sm transition-all hover:border-orange-200 hover:text-orange-600 uppercase tracking-tight"
+                className="inline-flex items-center bg-white dark:bg-slate-950 text-slate-600 dark:text-slate-300 text-[10px] font-black px-4 py-2 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm transition-all hover:border-orange-200 hover:text-orange-600 dark:hover:border-orange-500 dark:hover:text-orange-500 uppercase tracking-tight"
               >
                 <span className="mr-2 opacity-50">{getAmenityIcon(amenity)}</span>
                 {amenity}
@@ -126,13 +126,13 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing, isAdmin, onEdit, onD
         </div>
 
         {/* Action Buttons */}
-        <div className="pt-6 border-t border-slate-50 space-y-4">
+        <div className="pt-6 border-t border-slate-50 dark:border-slate-850 space-y-4">
            {!isAdmin && onBook && (
              <motion.button 
                whileHover={{ scale: 1.02, y: -2 }}
                whileTap={{ scale: 0.98 }}
                onClick={onBook} 
-               className="w-full bg-orange-600 text-white py-4 rounded-2xl font-black text-sm hover:bg-orange-700 transition-all flex items-center justify-center gap-2 shadow-xl shadow-orange-100"
+               className="w-full bg-orange-600 text-white py-4 rounded-2xl font-black text-sm hover:bg-orange-700 transition-all flex items-center justify-center gap-2 shadow-xl shadow-orange-100 dark:shadow-none pointer-events-auto"
              >
                 <CalendarCheck size={20} /> {t.bookInterest}
              </motion.button>
@@ -147,7 +147,7 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing, isAdmin, onEdit, onD
                 exit={{ opacity: 0 }}
                 whileHover={{ backgroundColor: '#fff7ed' }}
                 onClick={() => setShowContact(true)} 
-                className="w-full bg-white text-orange-600 border-2 border-orange-100 py-4 rounded-2xl font-black flex items-center justify-center text-sm transition-all"
+                className="w-full bg-white dark:bg-slate-900 text-orange-600 dark:text-orange-500 border-2 border-orange-100 dark:border-slate-850 py-4 rounded-2xl font-black flex items-center justify-center text-sm transition-all cursor-pointer"
               >
                 <Phone size={18} className="mr-2" /> {t.viewContact}
               </motion.button>
@@ -156,7 +156,7 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing, isAdmin, onEdit, onD
                 key="contact-info"
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="bg-orange-600 rounded-2xl p-5 text-center shadow-xl shadow-orange-100"
+                className="bg-orange-600 rounded-2xl p-5 text-center shadow-xl shadow-orange-100 dark:shadow-none"
               >
                 <p className="text-[10px] text-orange-100 font-black uppercase tracking-[0.2em] mb-1">{listing.contactPerson}</p>
                 <a href={`tel:${listing.contactNumber}`} className="text-2xl font-black text-white block hover:underline tracking-tighter">
