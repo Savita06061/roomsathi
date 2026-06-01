@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Phone, Mail, MapPin, Facebook, Instagram, Twitter, Lock, ShieldCheck, Heart } from 'lucide-react';
+import { Phone, Mail, MapPin, Facebook, Instagram, Twitter, Lock, ShieldCheck, Heart, User } from 'lucide-react';
 
 interface FooterProps {
   onAdminClick?: () => void;
@@ -67,16 +67,16 @@ const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
           <h3 className="text-orange-500 font-bold mb-4 uppercase text-xs tracking-widest">HQ Support</h3>
           <div className="space-y-4">
             <div className="flex items-start gap-3">
-               <div className="mt-1 text-orange-500"><Phone size={16} /></div>
+               <div className="mt-1 text-orange-500"><User size={16} /></div>
                <div>
-                 <p className="text-white font-bold">9340303098</p>
-                 <p className="text-[10px] text-slate-500 font-bold">Mr. Vinay Chandravanshi</p>
+                 <p className="text-white font-bold text-sm">Mr. Vinay Chandravanshi</p>
+                 <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Office HQ</p>
                </div>
             </div>
             <div className="flex items-start gap-3">
                <div className="mt-1 text-orange-500"><Mail size={16} /></div>
                <div>
-                 <p className="text-white font-bold text-xs">roomsathi@gmail.com</p>
+                 <p className="text-white font-bold text-xs">amanpatel9802@gmail.com</p>
                  <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Official Support</p>
                </div>
             </div>

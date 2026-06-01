@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Home, Languages, ArrowRight, ShieldCheck, Users, MapPin, Lock, Settings, PhoneCall, Map, Zap, Star, ShieldAlert, Clock, Wallet, Sun, Moon } from 'lucide-react';
+import { Home, Languages, ArrowRight, ShieldCheck, Users, MapPin, Lock, Settings, PhoneCall, Map, Zap, Star, ShieldAlert, Clock, Wallet, Sun, Moon, Mail } from 'lucide-react';
 import { ViewState, Language, User } from '../types';
 import { translations } from '../translations';
 import Footer from './Footer';
@@ -279,16 +279,16 @@ const LandingPage: React.FC<LandingPageProps> = ({
                   whileHover={{ rotate: 0 }}
                   className="bg-slate-900 p-12 rounded-[4rem] text-white shadow-2xl transform lg:rotate-2 transition-transform"
                 >
-                   <PhoneCall size={48} className="text-orange-500 mb-8" />
+                   <Mail size={48} className="text-orange-500 mb-8" />
                    <h3 className="text-3xl font-black mb-4">{language === 'HI' ? 'आधिकारिक सहायता' : 'Official Support'}</h3>
                    <p className="text-slate-400 font-medium text-lg leading-relaxed mb-8">
                      {language === 'HI' 
-                        ? 'रूम ढूँढने में दिक्कत आ रही है? हमारी टीम आपको पर्सनली गाइड करेगी। विश्व भर के हर मोहल्ले की सही जानकारी के लिए कॉल करें।' 
-                        : 'Having trouble finding a room? Our team will guide you personally. Call for accurate info on every locality globally.'}
+                        ? 'रूम ढूँढने में दिक्कत आ रही है? हमारी टीम आपको पर्सनली गाइड करेगी। विश्व भर के हर मोहल्ले की सही जानकारी के लिए ईमेल भेजें।' 
+                        : 'Having trouble finding a room? Our team will guide you personally. Email us for accurate info on every locality globally.'}
                    </p>
-                   <div className="flex items-center gap-6">
-                      <div className="text-3xl font-black text-white">+91 9340303098</div>
-                      <div className="bg-white/10 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border border-white/10">Vinay C.</div>
+                   <div className="flex flex-col sm:flex-row sm:items-center gap-6">
+                      <div className="text-xl md:text-2xl font-black text-white break-all">amanpatel9802@gmail.com</div>
+                      <div className="bg-white/10 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border border-white/10 w-fit">Vinay C.</div>
                    </div>
                 </motion.div>
              </motion.div>
