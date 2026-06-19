@@ -15,6 +15,7 @@ import AuthModal from './components/AuthModal';
 import CompareDrawer from './components/CompareDrawer';
 import RentBudgetPlanner from './components/RentBudgetPlanner';
 import ReviewsModal from './components/ReviewsModal';
+import AgreementGenerator from './components/AgreementGenerator';
 import { MOCK_LISTINGS } from './constants';
 import { FilterState, Listing, ViewState, Booking, Language, ListingStatus, User, UserRole, Review } from './types';
 import { translations } from './translations';
@@ -341,6 +342,9 @@ function App() {
                   )}
                 </AnimatePresence>
               </motion.div>
+
+              {/* Seamlessly Integrated Dual-Language Rental Agreement Generator */}
+              <AgreementGenerator language={language} />
             </motion.main>
           )}
         </AnimatePresence>

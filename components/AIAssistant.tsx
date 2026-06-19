@@ -123,6 +123,30 @@ const AIAssistant: React.FC = () => {
               <div ref={messagesEndRef} />
             </div>
 
+            {/* Quick Queries presets */}
+            <div className="px-4 py-2 bg-slate-50 dark:bg-slate-950 flex gap-2 overflow-x-auto scrollbar-hide border-t border-slate-100 dark:border-slate-800">
+              {[
+                'Landlord Rules',
+                'Agreement Help',
+                'Avoid Brokerage'
+              ].map((query, i) => (
+                <button
+                  key={i}
+                  onClick={() => {
+                    setInputValue(query === 'Landlord Rules' 
+                      ? 'What are the main rules that landlords must follow on Room Saathi?' 
+                      : query === 'Agreement Help' 
+                      ? 'What should I verify in my rental agreement draft?' 
+                      : 'How can I stay safe from local broker frauds?'
+                    );
+                  }}
+                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-xl flex-shrink-0 hover:border-orange-600 dark:hover:border-orange-500 transition-colors cursor-pointer"
+                >
+                  💡 {query}
+                </button>
+              ))}
+            </div>
+
             {/* Input Area */}
             <div className="p-4 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex gap-3">
               <input 
