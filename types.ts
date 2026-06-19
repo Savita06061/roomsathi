@@ -24,6 +24,14 @@ export interface User {
   walletType?: WalletType;
 }
 
+export interface Review {
+  id: string;
+  author: string;
+  rating: number;
+  comment: string;
+  date: string;
+}
+
 export interface Listing {
   id: string;
   type: RoomType;
@@ -37,6 +45,8 @@ export interface Listing {
   isVerified: boolean;
   status: ListingStatus;
   ownerId?: string;
+  rating?: number;
+  reviews?: Review[];
 }
 
 export interface Booking {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Listing, RoomType, Language } from '../types';
-import { MapPin, Phone, CheckCircle, Wifi, Zap, Coffee, Edit, Trash2, CalendarCheck, ShieldCheck, User } from 'lucide-react';
+import { MapPin, Phone, CheckCircle, Wifi, Zap, Coffee, Edit, Trash2, CalendarCheck, ShieldCheck, User, Star } from 'lucide-react';
 import { translations } from '../translations';
 
 interface ListingCardProps {
@@ -11,9 +11,22 @@ interface ListingCardProps {
   onDelete?: () => void;
   onBook?: () => void;
   language?: Language;
+  onViewReviews?: () => void;
+  onToggleCompare?: () => void;
+  isCompared?: boolean;
 }
 
-const ListingCard: React.FC<ListingCardProps> = ({ listing, isAdmin, onEdit, onDelete, onBook, language = 'HI' }) => {
+const ListingCard: React.FC<ListingCardProps> = ({ 
+  listing, 
+  isAdmin, 
+  onEdit, 
+  onDelete, 
+  onBook, 
+  language = 'HI',
+  onViewReviews,
+  onToggleCompare,
+  isCompared = false
+}) => {
   const [showContact, setShowContact] = useState(false);
   const t = translations[language];
 
@@ -44,6 +57,30 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing, isAdmin, onEdit, onD
         <div className="absolute top-4 left-4 z-20 flex gap-2">
           <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={onEdit} className="bg-white text-blue-600 p-2.5 rounded-xl shadow-lg hover:bg-blue-600 hover:text-white transition-all"><Edit size={18} /></motion.button>
           <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={onDelete} className="bg-white text-red-600 p-2.5 rounded-xl shadow-lg hover:bg-red-600 hover:text-white transition-all"><Trash2 size={18} /></motion.button>
+        </div>
+      )}
+
+      {!isAdmin && onToggleCompare && (
+        <div className="absolute top-4 left-4 z-20">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onToggleCompare(); }}
+            className={`px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider flex items-center gap-2 backdrop-blur-md shadow-xl border cursor-pointer transition-all ${
+              isCompared 
+                ? 'bg-orange-600 text-white border-orange-500 shadow-orange-100 dark:shadow-none' 
+                : 'bg-white/90 dark:bg-slate-900/90 text-slate-700 dark:text-slate-300 border-white/20 dark:border-slate-800'
+            }`}
+          >
+            <input 
+              type="checkbox" 
+              checked={isCompared} 
+              onChange={() => {}} // dummy to avoid react warning, clicked handled above
+              className="accent-orange-600 h-3 w-3 rounded border-gray-300"
+            />
+            {language === 'HI' ? 'तुलना करें' : 'Compare'}
+          </motion.button>
         </div>
       )}
 
@@ -97,7 +134,28 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing, isAdmin, onEdit, onD
              <MapPin size={16} className="flex-shrink-0" />
              <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight leading-none">{listing.locality}</h3>
           </div>
-          <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mb-6 line-clamp-1 leading-relaxed">{listing.address}</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mb-2 line-clamp-1 leading-relaxed">{listing.address}</p>
+
+          <button 
+            type="button" 
+            onClick={onViewReviews}
+            className="flex items-center gap-1.5 min-h-[24px] text-xs font-black text-slate-500 dark:text-slate-400 hover:text-orange-600 dark:hover:text-orange-500 transition-colors cursor-pointer mb-6"
+            title="View Reviews"
+          >
+            <div className="flex text-orange-500">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <Star
+                  key={star}
+                  size={12}
+                  fill={star <= Math.round(listing.rating || 4) ? '#ea580c' : 'none'}
+                  className={star <= Math.round(listing.rating || 4) ? 'text-orange-600 animate-pulse' : 'text-slate-200 dark:text-slate-700'}
+                />
+              ))}
+            </div>
+            <span className="underline decoration-dotted underline-offset-2">
+              {listing.rating || '4.0'} ({listing.reviews?.length || 0} {language === 'HI' ? 'समीक्षाएं' : 'reviews'})
+            </span>
+          </button>
 
           {/* New Metadata Row */}
           <div className="grid grid-cols-2 gap-4 mb-8 bg-slate-50 dark:bg-slate-950/40 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">

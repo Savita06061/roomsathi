@@ -12,8 +12,11 @@ import OwnerDashboard from './components/OwnerDashboard';
 import LandingPage from './components/LandingPage';
 import BookingModal from './components/BookingModal';
 import AuthModal from './components/AuthModal';
+import CompareDrawer from './components/CompareDrawer';
+import RentBudgetPlanner from './components/RentBudgetPlanner';
+import ReviewsModal from './components/ReviewsModal';
 import { MOCK_LISTINGS } from './constants';
-import { FilterState, Listing, ViewState, Booking, Language, ListingStatus, User, UserRole } from './types';
+import { FilterState, Listing, ViewState, Booking, Language, ListingStatus, User, UserRole, Review } from './types';
 import { translations } from './translations';
 import { SearchX } from 'lucide-react';
 
@@ -50,6 +53,59 @@ function App() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingListing, setEditingListing] = useState<Listing | null>(null);
   const [bookingListing, setBookingListing] = useState<Listing | null>(null);
+  const [comparedListingIds, setComparedListingIds] = useState<string[]>([]);
+  const [activeReviewListing, setActiveReviewListing] = useState<Listing | null>(null);
+
+  const comparedListings = useMemo(() => {
+    return listings.filter(l => comparedListingIds.includes(l.id));
+  }, [listings, comparedListingIds]);
+
+  const handleToggleCompare = (id: string) => {
+    setComparedListingIds(prev => 
+      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    );
+  };
+
+  const handleClearCompare = () => {
+    setComparedListingIds([]);
+  };
+
+  const handleApplyBudgetFilter = (maxRent: number) => {
+    setFilters(prev => ({ ...prev, maxPrice: maxRent }));
+    setTimeout(() => {
+      document.getElementById('search-filter-section')?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
+
+  const handleAddReview = (listingId: string, newReview: Review) => {
+    setListings(prev => prev.map(l => {
+      if (l.id === listingId) {
+        const updatedReviews = l.reviews ? [...l.reviews, newReview] : [newReview];
+        const totalRating = updatedReviews.reduce((acc, r) => acc + r.rating, 0);
+        const avgRating = Number((totalRating / updatedReviews.length).toFixed(1));
+        return {
+          ...l,
+          reviews: updatedReviews,
+          rating: avgRating
+        };
+      }
+      return l;
+    }));
+    
+    setActiveReviewListing(prev => {
+      if (prev && prev.id === listingId) {
+        const updatedReviews = prev.reviews ? [...prev.reviews, newReview] : [newReview];
+        const totalRating = updatedReviews.reduce((acc, r) => acc + r.rating, 0);
+        const avgRating = Number((totalRating / updatedReviews.length).toFixed(1));
+        return {
+          ...prev,
+          reviews: updatedReviews,
+          rating: avgRating
+        };
+      }
+      return prev;
+    });
+  };
 
   const handleLoginSuccess = (loggedInUser: User) => {
     setUser(loggedInUser);
@@ -237,7 +293,15 @@ function App() {
                 <h2 className="text-3xl font-bold text-gray-800 mb-2">{language === 'HI' ? 'विश्व भर में कमरे खोजें' : 'Find Rooms Globally'}</h2>
                 <p className="text-gray-500">{language === 'HI' ? 'वेरिफाइड पीजी, फ्लैट और कमरे देखें।' : 'Browse verified rooms.'}</p>
               </div>
-              <FilterBar filters={filters} setFilters={setFilters} />
+
+              {/* Interactive Rent budget planning helper */}
+              <div className="mb-8">
+                <RentBudgetPlanner onApplyBudget={handleApplyBudgetFilter} language={language} />
+              </div>
+
+              <div id="search-filter-section" className="mb-4">
+                <FilterBar filters={filters} setFilters={setFilters} />
+              </div>
               <motion.div 
                 layout
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8"
@@ -254,7 +318,14 @@ function App() {
                         whileHover={{ y: -5 }}
                         transition={{ duration: 0.3 }}
                       >
-                        <ListingCard listing={listing} onBook={() => setBookingListing(listing)} language={language} />
+                        <ListingCard 
+                          listing={listing} 
+                          onBook={() => setBookingListing(listing)} 
+                          language={language}
+                          onViewReviews={() => setActiveReviewListing(listing)}
+                          onToggleCompare={() => handleToggleCompare(listing.id)}
+                          isCompared={comparedListingIds.includes(listing.id)}
+                        />
                       </motion.div>
                     ))
                   ) : (
@@ -295,11 +366,20 @@ function App() {
             language={language}
           />
         )}
-        {bookingListing && (
+         {bookingListing && (
           <BookingModal 
             listing={bookingListing} 
             onClose={() => setBookingListing(null)} 
             onConfirm={handleCreateBooking}
+            language={language}
+          />
+        )}
+        {activeReviewListing && (
+          <ReviewsModal 
+            isOpen={true}
+            listing={activeReviewListing}
+            onClose={() => setActiveReviewListing(null)}
+            onAddReview={handleAddReview}
             language={language}
           />
         )}
@@ -312,6 +392,17 @@ function App() {
           />
         )}
       </AnimatePresence>
+
+      {/* Floating compare container for selected rooms */}
+      {isSubscribed && comparedListings.length > 0 && (
+         <CompareDrawer 
+           comparedListings={comparedListings}
+           onRemove={handleToggleCompare}
+           onClearAll={handleClearCompare}
+           onBook={(l) => setBookingListing(l)}
+           language={language}
+         />
+      )}
     </div>
   );
 }
