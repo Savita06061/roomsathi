@@ -1,10 +1,10 @@
 
 export const translations = {
   EN: {
-    appName: "RoomSaathi",
-    appTagline: "World Wide Web #1 Rental App",
+    appName: "Room Saathi",
+    appTagline: "Powered by Shelby Networks",
     heroTitle: "Find your perfect room without the hassle.",
-    heroSub: "Join thousands of students and families who use Room Saathi to find verified PGs and flats globally.",
+    heroSub: "Join thousands of students and families who use Room Saathi – Powered by Shelby Networks to find verified PGs and flats globally.",
     findRoom: "Find a Room",
     listProperty: "List Room",
     officialPartner: "Official Global Rental Partner",
@@ -39,9 +39,9 @@ export const translations = {
   },
   HI: {
     appName: "रूम साथी",
-    appTagline: "विश्व का नंबर 1 रेंटल ऐप",
+    appTagline: "शेल्बी नेटवर्क द्वारा संचालित",
     heroTitle: "बिना किसी परेशानी के अपना पसंदीदा कमरा ढूँढें।",
-    heroSub: "दुनिया भर के हज़ारों छात्रों और परिवारों के साथ जुड़ें जो वेरिफाइड पीजी और फ्लैट खोजने के लिए रूम साथी का उपयोग करते हैं।",
+    heroSub: "दुनिया भर के हज़ारों छात्रों और परिवारों के साथ जुड़ें जो वेरिफाइड पीजी और फ्लैट खोजने के लिए रूम साथी – Powered by Shelby Networks का उपयोग करते हैं।",
     findRoom: "कमरा खोजें",
     listProperty: "कमरा लिस्ट करें",
     officialPartner: "आधिकारिक वैश्विक रेंटल पार्टनर",

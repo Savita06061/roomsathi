@@ -17,7 +17,10 @@ const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
             <div className="bg-orange-600 p-1.5 rounded-lg text-white">
                <ShieldCheck size={20} />
             </div>
-            <h2 className="text-xl font-bold text-white tracking-tight">RoomSaathi</h2>
+            <div className="flex flex-col">
+              <h2 className="text-xl font-black text-white tracking-tight leading-none">Room Saathi</h2>
+              <span className="text-[8px] font-black text-orange-500 uppercase tracking-widest leading-none mt-1">Powered by Shelby Networks</span>
+            </div>
           </div>
           <p className="text-sm leading-relaxed text-slate-500 mb-6">
             Connecting landlords and tenants globally on a single, secure, and smart platform. 

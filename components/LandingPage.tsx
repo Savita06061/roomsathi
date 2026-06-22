@@ -43,7 +43,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
             </div>
             <div className="flex flex-col">
               <span className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter leading-none transition-colors">Room<span className="text-orange-600">Saathi</span></span>
-              <span className="text-[9px] font-black text-orange-600 uppercase tracking-[0.5em] mt-1">World Wide Web Hub</span>
+              <span className="text-[8px] font-black text-orange-600 uppercase tracking-widest mt-1">Powered by Shelby Networks</span>
             </div>
           </motion.div>
           
