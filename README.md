@@ -7,12 +7,12 @@ Powered by Web3 ⚡ | Built on Aptos + Shelby Protocol
 
 ## 🚀 Overview
 
-RoomSathi ek decentralized rental platform hai jahan users:
+RoomSathi is a decentralized rental platform where users can:
 
-- 🌍 Rooms discover kar sakte hain (global level par)
-- 🏡 Apni property list kar sakte hain
-- 🔐 Secure payments kar sakte hain using Web3 (APT + Shelby USD)
-- 📄 Rental agreements manage kar sakte hain (coming soon)
+- 🌍 Discover rooms globally  
+- 🏡 List their own properties  
+- 🔐 Make secure Web3 payments (APT & Shelby USD)  
+- 📄 Manage rental agreements (coming soon)  
 
 ---
 
@@ -21,9 +21,9 @@ RoomSathi ek decentralized rental platform hai jahan users:
 - 🔗 Wallet Connect (Petra)  
 - 💸 Web3 Payments (APT + Shelby USD) *(In Progress)*  
 - 📊 Budget Planning & Comparison Tools  
-- 🌙 Dark Mode UI  
+- 🌙 Dark Mode Support  
 - 🌐 Multi-language Support  
-- 🎨 Modern UI/UX with Animations  
+- 🎨 Modern UI/UX with smooth animations  
 
 ---
 
@@ -43,10 +43,10 @@ RoomSathi ek decentralized rental platform hai jahan users:
 components/        # UI Components
 services/          # API & Blockchain Logic
 App.tsx            # Main App Entry
-constants.ts       # Config Data
+constants.ts       # Configuration Data
 translations.ts    # Language Support
 index.css          # Styling
-vite.config.ts     # Build Config
+vite.config.ts     # Build Configuration
 ```
 
 ---
@@ -54,13 +54,13 @@ vite.config.ts     # Build Config
 ## 🛠️ Installation & Setup
 
 ```bash
-# Clone repo
+# Clone the repository
 git clone https://github.com/your-username/roomsathi.git
 
 # Install dependencies
 npm install
 
-# Run locally
+# Start development server
 npm run dev
 ```
 
@@ -84,17 +84,17 @@ https://roomsathi.vercel.app
 
 ## 🔐 Web3 Integration
 
-RoomSathi uses:
+RoomSathi integrates:
 
-- Aptos Blockchain for transactions  
-- Shelby Protocol for decentralized storage & verification  
+- **Aptos Blockchain** for transactions  
+- **Shelby Protocol** for decentralized storage & verification  
 
 ---
 
 ## 📌 Roadmap
 
 - 🧾 Smart Rental Agreements  
-- 🧠 AI-based Room Suggestions  
+- 🧠 AI-based Room Recommendations  
 - 📍 Location Intelligence  
 - ⭐ Review & Rating System  
 - 📱 Mobile App Version  
@@ -103,7 +103,7 @@ RoomSathi uses:
 
 ## 👨‍💻 Author
 
-Savita06061
+**Savita06061**
 
 ---
 
@@ -115,4 +115,4 @@ MIT License
 
 ## ⭐ Support
 
-Agar project pasand aaye to star ⭐ zaroor dena!
+If you like this project, don’t forget to give it a ⭐ on GitHub!
