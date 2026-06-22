@@ -121,15 +121,22 @@ const Header: React.FC<HeaderProps> = ({ onLogout, user, language, setLanguage, 
 
           <div className="h-8 w-px bg-slate-100 dark:bg-slate-850 mx-1 transition-colors"></div>
 
-          <motion.button 
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setLanguage(language === 'EN' ? 'HI' : 'EN')}
-            className="flex items-center gap-2 px-4 py-2 hover:bg-orange-50 dark:hover:bg-slate-850 rounded-xl text-[10px] font-black text-slate-900 dark:text-slate-100 border-2 border-slate-100 dark:border-slate-850 transition-all uppercase tracking-widest cursor-pointer"
-          >
-            <Languages size={16} className="text-orange-600" />
-            <span className="hidden md:inline">{language === 'EN' ? 'हिन्दी' : 'English'}</span>
-          </motion.button>
+          <div className="flex items-center gap-2 px-3 py-2 hover:bg-orange-50 dark:hover:bg-slate-850 rounded-xl border-2 border-slate-100 dark:border-slate-850 transition-all">
+            <Languages size={16} className="text-orange-600 shrink-0" />
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value as Language)}
+              className="bg-transparent text-[10px] font-black text-slate-900 dark:text-slate-100 uppercase tracking-widest cursor-pointer focus:outline-none pr-1 select-none border-none outline-none appearance-none"
+            >
+              <option value="EN" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">English</option>
+              <option value="HI" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">हिन्दी</option>
+              <option value="TA" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">தமிழ்/Tamil</option>
+              <option value="OD" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">ଓଡ଼ିଆ/Odia</option>
+              <option value="TE" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">తెలుగు/Telugu</option>
+              <option value="BN" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">বাংলা/Bengali</option>
+              <option value="MR" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">मराठी/Marathi</option>
+            </select>
+          </div>
 
           <motion.button 
             whileHover={{ scale: 1.05, backgroundColor: '#ef4444' }}

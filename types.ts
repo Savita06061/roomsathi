@@ -6,7 +6,7 @@ export enum RoomType {
   BACHELOR = 'Bachelor Room',
 }
 
-export type Language = 'EN' | 'HI';
+export type Language = 'EN' | 'HI' | 'TA' | 'OD' | 'TE' | 'BN' | 'MR';
 
 export type ListingStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
 
