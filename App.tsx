@@ -16,10 +16,13 @@ import CompareDrawer from './components/CompareDrawer';
 import RentBudgetPlanner from './components/RentBudgetPlanner';
 import ReviewsModal from './components/ReviewsModal';
 import AgreementGenerator from './components/AgreementGenerator';
+import Web3EscrowVault from './components/Web3EscrowVault';
+import Web3Passport from './components/Web3Passport';
+import Web3StreamPay from './components/Web3StreamPay';
 import { MOCK_LISTINGS } from './constants';
 import { FilterState, Listing, ViewState, Booking, Language, ListingStatus, User, UserRole, Review } from './types';
 import { translations } from './translations';
-import { SearchX } from 'lucide-react';
+import { SearchX, Lock, Award, Zap, Home } from 'lucide-react';
 
 function App() {
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
@@ -51,6 +54,7 @@ function App() {
   
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isOwnerSubscribed, setIsOwnerSubscribed] = useState(false);
+  const [customerTab, setCustomerTab] = useState<'EXPLORE' | 'ESCROW' | 'PASSPORT' | 'STREAM'>('EXPLORE');
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingListing, setEditingListing] = useState<Listing | null>(null);
   const [bookingListing, setBookingListing] = useState<Listing | null>(null);
@@ -285,66 +289,137 @@ function App() {
             </motion.div>
           ) : (
             <motion.main 
-              key="listings"
+              key="customer-main"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="max-w-6xl mx-auto px-4 pt-8 pb-12 flex-grow w-full"
+              className="max-w-6xl mx-auto px-4 pt-6 pb-12 flex-grow w-full"
             >
-              <div className="mb-8">
-                <h2 className="text-3xl font-bold text-gray-800 mb-2">{language === 'HI' ? 'विश्व भर में कमरे खोजें' : 'Find Rooms Globally'}</h2>
-                <p className="text-gray-500">{language === 'HI' ? 'वेरिफाइड पीजी, फ्लैट और कमरे देखें।' : 'Browse verified rooms.'}</p>
+              {/* Web3 Navigation Tabs */}
+              <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-6 border-b border-slate-200 dark:border-slate-800 no-scrollbar">
+                <button
+                  onClick={() => setCustomerTab('EXPLORE')}
+                  className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl font-black text-xs uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
+                    customerTab === 'EXPLORE'
+                      ? 'bg-orange-600 text-white shadow-lg shadow-orange-600/30'
+                      : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-850'
+                  }`}
+                >
+                  <Home size={16} /> {language === 'HI' ? 'कमरे खोजें' : 'Explore Rooms'}
+                </button>
+
+                <button
+                  onClick={() => setCustomerTab('ESCROW')}
+                  className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl font-black text-xs uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
+                    customerTab === 'ESCROW'
+                      ? 'bg-gradient-to-r from-orange-600 to-amber-500 text-white shadow-lg shadow-orange-600/30'
+                      : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-850'
+                  }`}
+                >
+                  <Lock size={16} /> {language === 'HI' ? 'स्मार्ट एस्क्रो' : 'Move Escrow Vault'}
+                  <span className="bg-amber-500/20 text-amber-500 dark:text-amber-400 text-[9px] font-black px-1.5 py-0.5 rounded">NEW</span>
+                </button>
+
+                <button
+                  onClick={() => setCustomerTab('PASSPORT')}
+                  className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl font-black text-xs uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
+                    customerTab === 'PASSPORT'
+                      ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30'
+                      : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-850'
+                  }`}
+                >
+                  <Award size={16} /> {language === 'HI' ? 'SBT पासपोर्ट' : 'SBT Tenant Passport'}
+                  <span className="bg-indigo-500/20 text-indigo-500 dark:text-indigo-400 text-[9px] font-black px-1.5 py-0.5 rounded">SBT</span>
+                </button>
+
+                <button
+                  onClick={() => setCustomerTab('STREAM')}
+                  className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl font-black text-xs uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
+                    customerTab === 'STREAM'
+                      ? 'bg-gradient-to-r from-emerald-600 to-teal-500 text-white shadow-lg shadow-emerald-600/30'
+                      : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-850'
+                  }`}
+                >
+                  <Zap size={16} /> {language === 'HI' ? 'रेंट स्ट्रीमिंग' : 'Crypto Rent Stream'}
+                </button>
               </div>
 
-              {/* Interactive Rent budget planning helper */}
-              <div className="mb-8">
-                <RentBudgetPlanner onApplyBudget={handleApplyBudgetFilter} language={language} />
-              </div>
+              {/* Sub-View Content */}
+              {customerTab === 'EXPLORE' && (
+                <>
+                  <div className="mb-8">
+                    <h2 className="text-3xl font-bold text-gray-800 dark:text-slate-100 mb-2">
+                      {language === 'HI' ? 'विश्व भर में कमरे खोजें' : 'Find Rooms Globally'}
+                    </h2>
+                    <p className="text-gray-500 dark:text-slate-400">
+                      {language === 'HI' ? 'वेरिफाइड पीजी, फ्लैट और कमरे देखें।' : 'Browse verified rooms on Web3 & Aptos Move Network.'}
+                    </p>
+                  </div>
 
-              <div id="search-filter-section" className="mb-4">
-                <FilterBar filters={filters} setFilters={setFilters} />
-              </div>
-              <motion.div 
-                layout
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8"
-              >
-                <AnimatePresence mode="popLayout">
-                  {filteredListings.length > 0 ? (
-                    filteredListings.map(listing => (
-                      <motion.div
-                        key={listing.id}
-                        layout
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.9 }}
-                        whileHover={{ y: -5 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <ListingCard 
-                          listing={listing} 
-                          onBook={() => setBookingListing(listing)} 
-                          language={language}
-                          onViewReviews={() => setActiveReviewListing(listing)}
-                          onToggleCompare={() => handleToggleCompare(listing.id)}
-                          isCompared={comparedListingIds.includes(listing.id)}
-                        />
-                      </motion.div>
-                    ))
-                  ) : (
-                    <motion.div 
-                      key="no-results"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="col-span-full py-20 text-center"
-                    >
-                      <SearchX className="mx-auto text-gray-300 mb-2" size={48} />
-                      <h3 className="font-bold">No rooms found.</h3>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
+                  {/* Interactive Rent budget planning helper */}
+                  <div className="mb-8">
+                    <RentBudgetPlanner onApplyBudget={handleApplyBudgetFilter} language={language} />
+                  </div>
 
-              {/* Seamlessly Integrated Dual-Language Rental Agreement Generator */}
-              <AgreementGenerator language={language} />
+                  <div id="search-filter-section" className="mb-4">
+                    <FilterBar filters={filters} setFilters={setFilters} />
+                  </div>
+
+                  <motion.div 
+                    layout
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8"
+                  >
+                    <AnimatePresence mode="popLayout">
+                      {filteredListings.length > 0 ? (
+                        filteredListings.map(listing => (
+                          <motion.div
+                            key={listing.id}
+                            layout
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                            whileHover={{ y: -5 }}
+                            transition={{ duration: 0.3 }}
+                          >
+                            <ListingCard 
+                              listing={listing} 
+                              onBook={() => setBookingListing(listing)} 
+                              language={language}
+                              onViewReviews={() => setActiveReviewListing(listing)}
+                              onToggleCompare={() => handleToggleCompare(listing.id)}
+                              isCompared={comparedListingIds.includes(listing.id)}
+                            />
+                          </motion.div>
+                        ))
+                      ) : (
+                        <motion.div 
+                          key="no-results"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          className="col-span-full py-20 text-center"
+                        >
+                          <SearchX className="mx-auto text-gray-300 mb-2" size={48} />
+                          <h3 className="font-bold">No rooms found.</h3>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+
+                  {/* Seamlessly Integrated Dual-Language Rental Agreement Generator */}
+                  <AgreementGenerator language={language} />
+                </>
+              )}
+
+              {customerTab === 'ESCROW' && (
+                <Web3EscrowVault language={language} user={user} />
+              )}
+
+              {customerTab === 'PASSPORT' && (
+                <Web3Passport language={language} user={user} />
+              )}
+
+              {customerTab === 'STREAM' && (
+                <Web3StreamPay language={language} user={user} />
+              )}
             </motion.main>
           )}
         </AnimatePresence>

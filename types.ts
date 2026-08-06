@@ -72,3 +72,39 @@ export interface ChatMessage {
 }
 
 export type ViewState = 'LANDING' | 'ADMIN' | 'CUSTOMER' | 'OWNER';
+
+export interface Web3Escrow {
+  id: string;
+  contractAddress: string;
+  listingTitle: string;
+  amountApt: number;
+  amountSusd: number;
+  tenantAddress: string;
+  landlordAddress: string;
+  status: 'LOCKED' | 'RELEASED' | 'DISPUTED';
+  timelockMonths: number;
+  txHash: string;
+  createdAt: string;
+}
+
+export interface Web3Badge {
+  id: string;
+  title: string;
+  tokenStandard: 'Move SBT' | 'Aptos NFT' | 'Shelby Pass';
+  issuedDate: string;
+  icon: string;
+  scorePoints: number;
+  description: string;
+}
+
+export interface RentStream {
+  id: string;
+  listingTitle: string;
+  ratePerSecSUSD: number;
+  totalDepositedSUSD: number;
+  streamedSoFarSUSD: number;
+  isActive: boolean;
+  landlordAddress: string;
+  startDate: string;
+}
+
